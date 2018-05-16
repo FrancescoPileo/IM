@@ -1,3 +1,5 @@
+import * as d3 from "d3"
+
 function dashboard(id, fData){
     var barColor = 'steelblue';
     function segColor(c){ return {positivo:"#807dba", neutrale:"#e08214", negativo:"#41ab5d"}[c]; }

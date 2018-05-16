@@ -1,2 +1,0 @@
-# IM
-Progetto Informatica Multimediale
