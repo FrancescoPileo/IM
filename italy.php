@@ -2,8 +2,8 @@
 <meta charset="utf-8">
 <style>
     .map {fill: #666; stroke: #f5f5f5;}
-    .border_map {stroke: red; stroke-width: 3px;}
-    .torino_map {fill: #fff; stroke: blue; stroke-width: 3px;}
+    .border_map {stroke: darkseagreen; stroke-width: 2px;}
+    .regione_map { stroke:darkcyan; stroke-width: 2px;}
 </style>
 <html>
 <body>
@@ -53,11 +53,11 @@
         .attr("d",path);*/
 
 
-        // draw TORINO border (i.e. the border of a given feature)
-        /*svg.append("path")
-            .datum(topojson.mesh(it, it.objects.sub, function(a, b) { return b.id === 'FOGGIA' || a.id === 'FOGGIA'; }))
-            .attr("class", "foggia_map")
-           .attr("d", path);*/
+        //draw TORINO border (i.e. the border of a given feature)
+        svg.append("path")
+            .datum(topojson.mesh(it, it.objects.sub, function(a, b) { return a.properties.COD_REG !== b.properties.COD_REG; }))
+            .attr("class", "regione_map")
+            .attr("d", path);
     });
 </script>
 
