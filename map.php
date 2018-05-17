@@ -62,7 +62,7 @@
         g.append("g")
             .attr("id", "states")
             .selectAll("path")
-            .data(topojson.feature(it, it.objects.sub).features.)
+            .data(topojson.feature(it, it.objects.sub).features)
             .enter().append("path")
             .attr("d", path)
             .on("click", clicked);
