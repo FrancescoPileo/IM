@@ -8,7 +8,7 @@
     }
 
     #states {
-        fill: #aaa;
+        fill: #07a0aa;
     }
 
     #states .active {
@@ -30,8 +30,8 @@
 <script src="//d3js.org/topojson.v1.min.js"></script>
 <script>
 
-    var width = 960,
-        height = 500,
+    var width = window.innerWidth - 100,
+        height = window.innerHeight - 100,
         centered;
 
     var projection = d3.geo.albers()
@@ -56,7 +56,7 @@
 
     var g = svg.append("g");
 
-    d3.json("itx.json", function(error, it) {
+    d3.json("itx2.json", function(error, it) {
         if (error) throw error;
 
         g.append("g")
