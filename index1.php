@@ -2,6 +2,7 @@
 <meta charset="utf-8">
 
 <head>
+    <script type="text/javascript" src="JavaScript/d3.js"></script>
     <script type="text/javascript" src="JavaScript/dashboard.js"></script>
     <link rel="stylesheet" href="CSS/dashboard.css">
     <?php include_once 'DbConnection.php'; ?>
