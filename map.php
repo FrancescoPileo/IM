@@ -15,6 +15,10 @@
         fill: orange;
     }
 
+    #states .selected {
+        fill: darkseagreen;
+    }
+
     #state-borders {
         fill: none;
         stroke: #fff;
@@ -28,6 +32,60 @@
 <body>
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script src="//d3js.org/topojson.v1.min.js"></script>
+
+<div id="geocoder">
+    <label for="lat">Latitude</label>
+    <input id="lat" type="textbox" value="40.8367348">
+    <label for="lon">Longitude</label>
+    <input id="lon" type="textbox" value="14.24910692">
+    <input id="submit" type="button" value="Geolocalizza">
+    <input id="name" type="textbox">
+</div>
+
+<script>
+
+
+    function init() {
+        var geocoder = new google.maps.Geocoder();
+
+        document.getElementById('submit').addEventListener('click', function () {
+            getLocation(geocoder);
+        });
+    }
+
+    function getLocation(geocoder){
+        var lat = document.getElementById('lat').value;
+        var lon = document.getElementById('lon').value;
+        var resultAddress = document.getElementById('result');
+
+        var latlng = {lat: parseFloat(lat), lng: parseFloat(lon)};
+        geocoder.geocode({'location': latlng}, function(results, status){
+            if (status === 'OK'){
+                if (results[0]){
+                    var region = results[0].address_components[4].long_name.toLowerCase();
+                    //window.alert(region);
+                    if (document.getElementsByName(region).length == 1){
+                        document.getElementsByName(region)[0].classList.add("selected");
+                    } else {
+                        window.alert("Problema nel nome della regione");
+                    }
+                    //resultAddress.setContent(results[0].formatted_address);
+                } else {
+                    window.alert('Nessun risultato');
+                }
+            } else {
+                window.alert('Geocoder failed due to: ' + status);
+            }
+        });
+    }
+</script>
+
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCEM2YvE9T6KXE9vn4ErYss3Pwi0_XCr-I&callback=init">
+
+</script>
+
 <script>
 
     var width = window.innerWidth - 100,
@@ -65,6 +123,7 @@
             .data(topojson.feature(it, it.objects.sub).features)
             .enter().append("path")
             .attr("d", path)
+            .attr("name", function(d){ return d.properties.name.toLowerCase()})
             .on("click", clicked);
 
         g.append("path")
@@ -73,8 +132,12 @@
             .attr("d", path);
     });
 
+
     function clicked(d) {
         var x, y, k;
+
+        var regionName = d.properties.name;
+        document.getElementById('name').value=regionName;
 
         if (d && centered !== d) {
             var centroid = path.centroid(d);
