@@ -35,9 +35,9 @@
 
 <div id="geocoder">
     <label for="lat">Latitude</label>
-    <input id="lat" type="textbox" value="40.8367348">
+    <input id="lat" type="textbox" value="45.4386">
     <label for="lon">Longitude</label>
-    <input id="lon" type="textbox" value="14.24910692">
+    <input id="lon" type="textbox" value="12.3267">
     <input id="submit" type="button" value="Geolocalizza">
     <input id="name" type="textbox">
 </div>
@@ -62,9 +62,17 @@
         geocoder.geocode({'location': latlng}, function(results, status){
             if (status === 'OK'){
                 if (results[0]){
-                    var region = results[0].address_components[4].long_name.toLowerCase();
-                    //window.alert(region);
-                    if (document.getElementsByName(region).length == 1){
+                    var region = null;
+                    results[0].address_components.forEach(function (entry) {
+                        if (entry.types[0] === "administrative_area_level_1"){
+                            region = entry.long_name.toLowerCase();
+                        }
+                    });
+                    //window.alert(region + ": " + results[0].address_components[4].types[0]);
+                    if (document.getElementsByName(region).length === 1){
+                        for (var i = 0; i < document.getElementsByClassName("selected").length > 0; i++) {
+                            document.getElementsByClassName("selected")[i].classList.remove("selected");
+                        }
                         document.getElementsByName(region)[0].classList.add("selected");
                     } else {
                         window.alert("Problema nel nome della regione");
@@ -135,6 +143,10 @@
 
     function clicked(d) {
         var x, y, k;
+
+        for (var i = 0; i < document.getElementsByClassName("selected").length > 0; i++) {
+            document.getElementsByClassName("selected")[i].classList.remove("selected");
+        }
 
         var regionName = d.properties.name;
         document.getElementById('name').value=regionName;
