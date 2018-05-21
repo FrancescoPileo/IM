@@ -20,14 +20,22 @@
             <th>Id</th>
             <th>Lat</th>
             <th>Lon</th>
+            <th>Stato</th>
             <th>Regione</th>
+            <th>Provincia</th>
+            <th>Città</th>
+
         </tr>
         <?php
             for ($i = 0; $i < count($input); $i++){
                 echo "<tr>";
-                echo "<td>" . $input[$i][0] . "</td><td>"
-                    . $input[$i][1] . "</td><td>"
-                    . $input[$i][2] . "</td><td id = " . $input[$i][0] . "></td>";
+                echo "<td>" . $input[$i][0] . "</td>"
+                    . "<td>" . $input[$i][1] . "</td>"
+                    . "<td>" . $input[$i][2] . "</td>"
+                    . "<td id = \"s" . $input[$i][0] . "\"></td>"
+                    . "<td id = \"r" . $input[$i][0] . "\"></td>"
+                    . "<td id = \"p" . $input[$i][0] . "\"></td>"
+                    . "<td id = \"c" . $input[$i][0] . "\"></td>";
             }
         ?>
     </table>
@@ -46,26 +54,8 @@
             });
         }
 
-        /*function getLocations() {
-
-
-            var functionSting = 'getLocation(rows, "' +  + '")';
-
-            for (var i=1; i < 1000; i++){
-                var cells = rows[i].cells;
-                var delay = 5000 * i;
-                var functionString =  'getLocation("' + cells[0].innerHTML.toString() +
-                    '", "' + cells[1].innerHTML.toString() +
-                    '", "' + cells[2].innerHTML.toString() + '")';
-                console.log(functionString);
-                setTimeout( functionString , 2000 * i);
-
-            }
-
-        }*/
-
         function theNext() {
-            if (nextRow < 100) {
+            if (nextRow < 2000) {
                 setTimeout('getLocation("'+ rows[nextRow].cells[0].innerHTML.toString() +
                     '", "' + rows[nextRow].cells[1].innerHTML.toString() +
                     '", "' + rows[nextRow].cells[2].innerHTML.toString() + '",theNext)', delay);
@@ -78,21 +68,35 @@
 
 
         function getLocation(id, lat, lon, next){
+            var country = null;
             var region = null;
+            var province = null;
+            var city = null;
             var latlng = {lat: parseFloat(lat), lng: parseFloat(lon)};
             geocoder.geocode({'location': latlng}, function(results, status){
                 if (status === 'OK'){
                     if (results[0]){
                         results[0].address_components.forEach(function (entry) {
-                            if (entry.types[0] === "administrative_area_level_1"){
-                                region = entry.long_name.toLowerCase();
-                                //cell.innerHTML = region;
-                                //console.log("id: " + id + "regione:" + region);
-                                document.getElementById(id).innerText = region;
-                                update(id, region);
-
+                            switch(entry.types[0]) {
+                                case "country" :
+                                    country = entry.long_name.toLowerCase();
+                                    document.getElementById("s" + id).innerText = country;
+                                    break;
+                                case "administrative_area_level_1":
+                                    region = entry.long_name.toLowerCase();
+                                    document.getElementById("r" + id).innerText = region;
+                                    break;
+                                case "administrative_area_level_2":
+                                    province = entry.short_name.toLowerCase();
+                                    document.getElementById("p" + id).innerText = province;
+                                    break;
+                                case "administrative_area_level_3": //case "locality":
+                                    city = entry.long_name.toLowerCase();
+                                    document.getElementById("c" + id).innerText = city;
+                                    break;
                             }
                         });
+                        update(id, country, region, province, city);
                     }
                 } else if (status === 'OVER_QUERY_LIMIT'){
                     nextRow--;
@@ -103,13 +107,13 @@
             });
         }
 
-        function update(tweetId, regione)
+        function update(id, country, region, province, city)
         {
 
             $.ajax({
                 url: 'update.php',
                 type: 'post',
-                data: 'tweet_id='+tweetId+'&regione='+regione,
+                data: 'id='+id+'&country='+country+'&region='+region+'&province='+province+'&city='+city,
                 success: function(output)
                 {
                     //console.log("Insert ok");

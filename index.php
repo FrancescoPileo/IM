@@ -68,6 +68,8 @@
                     if (results[0]){
                         var region = null;
                         results[0].address_components.forEach(function (entry) {
+                            //console.log(entry.types[0] + ": " + entry.long_name.toLowerCase() + " (" + entry.short_name.toLowerCase() + ")");
+
                             if (entry.types[0] === "administrative_area_level_1"){
                                 region = entry.long_name.toLowerCase();
                             }

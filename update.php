@@ -17,10 +17,14 @@
         die("Connection failed: " . $conn->connect_error);
     }
 
-    $id = $_POST['tweet_id'];
-    $regione = $_POST['regione'];
+    $id = $_POST['id'];
+    $country = $_POST['country'];
+    $region = $_POST['region'];
+    $province = $_POST['province'];
+    $city = $_POST['city'];
 
-    $sql = "UPDATE Tweet SET Regione = '" . $regione . "' WHERE Id = " . $id;
+    $sql = "UPDATE Tweet SET Country='" . $country . "', Region='" . $region .
+                            "', Province='" . $province . "', City='" . $city . "'  WHERE Id = " . $id;
 
     $result = mysqli_query($conn, $sql) or die(mysqli_error($conn));
 
