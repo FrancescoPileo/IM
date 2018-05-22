@@ -68,6 +68,8 @@
                     if (results[0]){
                         var region = null;
                         results[0].address_components.forEach(function (entry) {
+                            //console.log(entry.types[0] + ": " + entry.long_name.toLowerCase() + " (" + entry.short_name.toLowerCase() + ")");
+
                             if (entry.types[0] === "administrative_area_level_1"){
                                 region = entry.long_name.toLowerCase();
                             }
@@ -99,15 +101,15 @@
     </script>
 
     <script>
-        var width = window.innerWidth - 100,
+        var width = window.innerWidth * 3 / 5 ,
             height = window.innerHeight - 100,
             centered;
 
         var projection = d3.geo.albers()
-            .center([0, 41])
+            .center([2, 42])
             .rotate([347, 0])
-            .parallels([35, 45])
-            .scale(2000)
+            .parallels([85, 45])
+            .scale(2500)
             .translate([width / 2, height / 2]);
 
         var path = d3.geo.path()
