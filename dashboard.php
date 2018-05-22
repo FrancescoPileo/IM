@@ -91,7 +91,7 @@
                     bars.select("text").transition().duration(500)
                         .text(function(d){ return d3.format(",")(d[1])})
                         .attr("y", function(d) {return y(d[1])-5; });
-                }
+                };
                 return hG;
             }
 
@@ -121,7 +121,7 @@
                 pC.update = function(nD){
                     piesvg.selectAll("path").data(pie(nD)).transition().duration(500)
                         .attrTween("d", arcTween);
-                }
+                };
                 // Utility function to be called on mouseover a pie slice.
                 function mouseover(d){
                     // call the update function of histogram with new data.
@@ -180,7 +180,7 @@
 
                     // update the percentage column.
                     l.select(".legendPerc").text(function(d){ return getLegend(d,nD);});
-                }
+                };
 
                 function getLegend(d,aD){ // Utility function to compute percentage.
                     return d3.format("%")(d.freq/d3.sum(aD.map(function(v){ return v.freq; })));

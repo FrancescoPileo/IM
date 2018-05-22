@@ -49,6 +49,26 @@ body {
     transition: background-color 0.5s ease-out;
 }
 
+.sidenav .filter{
+    padding: 6px 8px 6px 16px;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: #dcdcdc;
+}
+
+.sidenav .filter-name {
+    font-size: 22px;
+    color: #737373;
+    display: block;
+}
+
+
+    .sidenav .filter-content {
+        font-size: 18px;
+        color: #737373;
+        display: block;
+    }
+
 /* When you mouse over the navigation links, change their color */
 .sidenav a:hover {
     color: #b2b2b2;
@@ -66,6 +86,31 @@ body {
     /*border-style: solid;
     border-color: #000;
     border-width: 2px;*/
+}
+
+#info-table{
+    /*border-style: solid;
+    border-width: 1px;
+    border-color: #07a0aa;*/
+    /*visibility: hidden;*/
+}
+
+#info-table th {
+    /*border-style: solid;
+    border-width: 1px;
+    border-color: #07a0aa;*/
+}
+
+#info-table td {
+    /*border-style: solid;
+    border-width: 1px;
+    border-color: #07a0aa;*/
+}
+
+
+#contenitore .box {
+    /*width: 200px;*/
+    float: left;
 }
 
 .background {
@@ -123,4 +168,35 @@ body {
 /* Add some top padding to the page content to prevent sudden quick movement (as the navigation bar gets a new position at the top of the page (position:fixed and top:0) */
 .sticky + .content {
     padding-top: 60px;
+}
+
+/*-------------------------------- Informazioni -----------------------------------*/
+#info-data path {  stroke: #fff; }
+#info-data path:hover {  opacity:0.9; }
+
+.axis {  font: 10px sans-serif; }
+.legend tr{    border-bottom:1px solid grey; }
+.legend tr:first-child{    border-top:1px solid grey; }
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.x.axis path {  display: none; }
+.legend{
+    margin-bottom:76px;
+    display:inline-block;
+    border-collapse: collapse;
+    border-spacing: 0px;
+}
+.legend td{
+    padding:4px 5px;
+    vertical-align:bottom;
+}
+.legendFreq, .legendPerc{
+    align:right;
+    width:50px;
 }

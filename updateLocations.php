@@ -45,7 +45,7 @@
     <script>
         var geocoder;
         var rows = document.getElementById("table").rows;
-        var nextRow = 1150; //1
+        var nextRow = 2000; //1
         var delay = 500;
 
         function init() {
@@ -57,7 +57,7 @@
         }
 
         function theNext() {
-            if (nextRow < 2000) {
+            if (nextRow < 4000) {
                 setTimeout('getLocation("'+ rows[nextRow].cells[0].innerHTML.toString() +
                     '", "' + rows[nextRow].cells[1].innerHTML.toString() +
                     '", "' + rows[nextRow].cells[2].innerHTML.toString() + '",theNext)', delay);
@@ -102,7 +102,7 @@
                     }
                 } else if (status === 'OVER_QUERY_LIMIT'){
                     nextRow--;
-                    delay++;
+                    //delay++;
                     console.log('Geocoder failed due to: ' + status + ' on ' + id);
                 }
                 next();

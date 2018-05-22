@@ -25,6 +25,18 @@ function getFrequency($conn, $sentiment, $month, $year){
     return $ris['n'];
 }
 
+function getFrequencyByRegion($conn, $sentiment, $region){
+    $query = "SELECT COUNT(*) AS 'n' FROM Tweet WHERE Sentiment='" . $sentiment . "' AND Region=\"" . $region . "\"";
+    $ris = mysqli_fetch_assoc(mysqli_query($conn, $query));
+    $conn->close();
+    if ($ris['n']){
+        return $ris['n'];
+    } else {
+        return 0;
+    }
+}
+
+
 function getIdLatLon($conn){
     $return = null;
     $sql = "SELECT Id, Lat, Lon FROM Tweet";
