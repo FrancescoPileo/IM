@@ -86,6 +86,7 @@ body {
 /* ------------------------------------ Navbar ------------------------------------ */
 /* Style the navbar */
 #navbar {
+    z-index: 2;
     overflow: hidden;
     background-color: #838383;
     height: 60px;
