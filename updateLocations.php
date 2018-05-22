@@ -24,7 +24,7 @@
             <th>Regione</th>
             <th>Provincia</th>
             <th>Città</th>
-
+            <th>N</th>
         </tr>
         <?php
             for ($i = 0; $i < count($input); $i++){
@@ -35,7 +35,9 @@
                     . "<td id = \"s" . $input[$i][0] . "\"></td>"
                     . "<td id = \"r" . $input[$i][0] . "\"></td>"
                     . "<td id = \"p" . $input[$i][0] . "\"></td>"
-                    . "<td id = \"c" . $input[$i][0] . "\"></td>";
+                    . "<td id = \"c" . $input[$i][0] . "\"></td>"
+                    . "<td>" . $i . "</td>";
+                echo "</tr>";
             }
         ?>
     </table>
@@ -43,8 +45,8 @@
     <script>
         var geocoder;
         var rows = document.getElementById("table").rows;
-        var nextRow = 1;
-        var delay = 1000;
+        var nextRow = 1150; //1
+        var delay = 500;
 
         function init() {
             geocoder = new google.maps.Geocoder();
