@@ -182,7 +182,11 @@
                 }))
                 .attr("id", "state-borders")
                 .attr("d", path);
+            console.log("fdata", fData);
+
         });
+
+
 
 
         function clicked(d) {
@@ -240,30 +244,31 @@
                 .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
                 .style("stroke-width", 1.5 / k + "px");
 
-        }
-
-
-        function updateMapColors(d){
-            console.log(d.value);
-            /*d3.select("#map").selectAll("path").call(function (d) {
-                var st = fData.filter(function (s) {
-                        return s.State == d.properties.name.toLowerCase();
-                    })[0],
-                    nD = d3.keys(st.freq).map(function (s) {
-                        return {type: s, freq: st.freq[s]};
-                    });
-
-                console.log(d.properties.name.toLowerCase());
-            });*/
-
 
         }
 
+
+        /*function updateMapColors(fData){
+
+            fData.forEach(function (state) {
+                var pos = state.freq["positivo"];
+                var neu = state.freq["neutrale"];
+                var neg = state.freq["negativo"];
+                var maxSent = getMaxSentiment(pos, neu, neg);
+                var somma = state.freq["positivo"] + state.freq["neutrale"] + state.freq["negativo"];
+                var perc = 0;
+                if (somma > 0) {
+                    perc = (maxSent / somma) * 100;
+                    document.getElementsByName(state.State)[0].setAttribute("style", "fill:" + getColor(maxSent, perc));
+                }
+                d3.select("#map").select("path").select(state.name).style("fill" , state.style);
+            }
+        )}*/
 
         /* INFORMAZIONI */
         var id = "#info-data";
         var barColor = 'steelblue';
-        function segColor(c){ return {positivo:"#00ba63", neutrale:"#e08e1c", negativo:"#ab2976"}[c]; }
+        function segColor(c){ return {positivo:"#00ba63", neutrale:"#e08e1c", negativo:"#ab0600"}[c]; }
 
         // function to handle pieChart.
         function pieChart(pD){
@@ -382,6 +387,7 @@
         }
 
         function getColor(sent, perc){
+
             var colors = {positivo:{25: "#b6fecd", 50: "#97fed1", 75: "#00de82", 100: "#00ba63" },
                             neutrale:{25: "#fff682", 50: "#ffe031", 75: "#ffab1c", 100: "#e08e1c" },
                             negativo:{25: "#ffd6e4", 50: "#ea8bb0", 75: "#ea30a6", 100: "#ab2976" }};
@@ -494,7 +500,61 @@
 
     ];
 
+    /*function updateMapColors(fData){
+
+        fData.forEach(function (state) {
+            console.log("state", state);
+
+            var pos = state.freq["positivo"];
+                var neu = state.freq["neutrale"];
+                var neg = state.freq["negativo"];
+                var maxSent = getMaxSentiment(pos, neu, neg);
+                var somma = state.freq["positivo"] + state.freq["neutrale"] + state.freq["negativo"];
+                var perc = 0;
+                if (somma > 0) {
+                    perc = (maxSent / somma) * 100;
+                }
+                console.log("colour", getColor(maxSent, perc));
+
+---------------------------- non riesco a prendere la regione e a cambiarli colore in base al sentiment ---------------------
+
+                var array = document.getElementById("states");
+                console.log("array", array);
+                var regione = state.name == d3.select("#map").select("path").select("states").properties.name.toLowerCase()) {
+
+                }
+                d3.select("#map").select("path").select(state.name).style("colour" , getColor(maxSent, perc));
+
+            }
+        )}
+    function getMaxSentiment(pos, neu, neg) {
+        var maxValue;
+        if (pos >= neu) {maxValue = "positivo"} else maxValue = "neutrale";
+        if (neg >= neu) {maxValue = "negativo"} else maxValue = "neutrale";
+        return maxValue;
+
+    }
+
+    function getColor(sent, perc){
+
+        var colors = {positivo:{25: "#b6fecd", 50: "#97fed1", 75: "#00de82", 100: "#00ba63" },
+            neutrale:{25: "#fff682", 50: "#ffe031", 75: "#ffab1c", 100: "#e08e1c" },
+            negativo:{25: "#ffd6e4", 50: "#ea8bb0", 75: "#ea30a6", 100: "#ab2976" }};
+
+        if (perc <= 25){
+            return colors[sent][25];
+        } else if (perc <= 50){
+            return colors[sent][50];
+        } else if (perc <= 75){
+            return colors[sent][75];
+        } else {
+            return colors[sent][100];
+        }
+    }*/
+
     drawMap(freqData);
+    //updateMapColors(freqData);
+
 
 </script>
 
