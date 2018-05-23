@@ -370,9 +370,8 @@
                     var perc = 0;
                     if (somma > 0) {
                         perc = (valore / somma) * 100;
+                        document.getElementsByName(state.State)[0].setAttribute("style", "fill:" + getColor(d, perc));
                     }
-                    document.getElementsByName(state.State)[0].setAttribute("style", "fill:" + getColor(d, perc));
-
                     console.log(state.State + ": " + valore + " su " + somma + " ("+ perc +")");
                 });
             } else {
@@ -387,9 +386,7 @@
                             neutrale:{25: "#fff682", 50: "#ffe031", 75: "#ffab1c", 100: "#e08e1c" },
                             negativo:{25: "#ffd6e4", 50: "#ea8bb0", 75: "#ea30a6", 100: "#ab2976" }};
 
-            if (perc === 0 || perc === "NaN"){
-                return "#000000";
-            }else if (perc <= 25){
+            if (perc <= 25){
                 return colors[sent][25];
             } else if (perc <= 50){
                 return colors[sent][50];
