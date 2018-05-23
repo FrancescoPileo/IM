@@ -171,7 +171,7 @@
                 .data(topojson.feature(it, it.objects.sub).features)
                 .enter().append("path")
                 .attr("d", path)
-                .attr("name", function (d) {
+                .attr("id", function (d) {
                     return d.properties.name.toLowerCase()
                 })
                 .on("click", clicked);
@@ -375,13 +375,14 @@
                     var perc = 0;
                     if (somma > 0) {
                         perc = (valore / somma) * 100;
-                        document.getElementsByName(state.State)[0].setAttribute("style", "fill:" + getColor(d, perc));
+                        //console.log(state.State);
+                        document.getElementById(state.State).setAttribute("style", "fill:" + getColor(d, perc));
                     }
-                    console.log(state.State + ": " + valore + " su " + somma + " ("+ perc +")");
+                    //console.log(state.State + ": " + valore + " su " + somma + " ("+ perc +")");
                 });
             } else {
                 console.log("Tutti");
-                fData.forEach(function (state) { document.getElementsByName(state.State)[0].removeAttribute("style"); });
+                fData.forEach(function (state) { document.getElementById(state.State).removeAttribute("style"); });
             }
 
         }
