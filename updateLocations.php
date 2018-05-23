@@ -45,8 +45,8 @@
     <script>
         var geocoder;
         var rows = document.getElementById("table").rows;
-        var nextRow = 2000; //1
-        var delay = 500;
+        var nextRow = 3010; //1
+        var delay = 1000;
 
         function init() {
             geocoder = new google.maps.Geocoder();

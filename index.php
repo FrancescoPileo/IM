@@ -27,8 +27,8 @@
                 <div class="filter-content">
                     <input type="radio" name="radio-sentiment" value="all" checked>Tutti<br>
                     <input type="radio" name="radio-sentiment" value="pos" >Positivo<br>
-                    <input type="radio" name="radio-sentiment" value="neu" >Negativo<br>
-                    <input type="radio" name="radio-sentiment" value="neg" >Neutro<br>
+                    <input type="radio" name="radio-sentiment" value="neu" >Neutro<br>
+                    <input type="radio" name="radio-sentiment" value="neg" >Negativo<br>
                 </div>
             </div>
             <div class="filter">
@@ -129,12 +129,6 @@
                 }
             });
         }*/
-    </script>
-
-
-    <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCEM2YvE9T6KXE9vn4ErYss3Pwi0_XCr-I&callback=init">
-
     </script>
 
     <script>
@@ -249,6 +243,24 @@
         }
 
 
+        function updateMapColors(d){
+            console.log(d.value);
+            /*d3.select("#map").selectAll("path").call(function (d) {
+                var st = fData.filter(function (s) {
+                        return s.State == d.properties.name.toLowerCase();
+                    })[0],
+                    nD = d3.keys(st.freq).map(function (s) {
+                        return {type: s, freq: st.freq[s]};
+                    });
+
+                console.log(d.properties.name.toLowerCase());
+            });*/
+
+
+        }
+
+
+        /* INFORMAZIONI */
         var id = "#info-data";
         var barColor = 'steelblue';
         function segColor(c){ return {positivo:"#00ba63", neutrale:"#e08e1c", negativo:"#ab2976"}[c]; }
@@ -291,9 +303,7 @@
             return pC;
         }
 
-        var tF = ['positivo','neutrale','negativo'].map(function(d){
-            return {type:d, freq: d3.sum(fData.map(function(t){ return t.freq[d];}))};
-        });
+
 
 
 
@@ -341,11 +351,56 @@
             return leg;
         }
 
+        var tF = ['positivo','neutrale','negativo'].map(function(d){
+            return {type:d, freq: d3.sum(fData.map(function(t){ return t.freq[d];}))};
+        });
+
         var pC = pieChart(tF); // create the pie-chart.
         var leg= legend(tF);  // create the legend.
 
-    }
 
+        //Filtro sentiment
+        d3.selectAll('[name="radio-sentiment"]').data(["tutti", "positivo", "neutrale", "negativo"]).on("click", handleRadioSentiment);
+
+        function handleRadioSentiment(d) {
+            if (d !== "tutti") {
+                fData.forEach(function (state) {
+                    var valore = state.freq[d];
+                    var somma = state.freq["positivo"] + state.freq["neutrale"] + state.freq["negativo"];
+                    var perc = 0;
+                    if (somma > 0) {
+                        perc = (valore / somma) * 100;
+                    }
+                    document.getElementsByName(state.State)[0].setAttribute("style", "fill:" + getColor(d, perc));
+
+                    console.log(state.State + ": " + valore + " su " + somma + " ("+ perc +")");
+                });
+            } else {
+                console.log("Tutti");
+                fData.forEach(function (state) { document.getElementsByName(state.State)[0].removeAttribute("style"); });
+            }
+
+        }
+
+        function getColor(sent, perc){
+            var colors = {positivo:{25: "#b6fecd", 50: "#97fed1", 75: "#00de82", 100: "#00ba63" },
+                            neutrale:{25: "#fff682", 50: "#ffe031", 75: "#ffab1c", 100: "#e08e1c" },
+                            negativo:{25: "#ffd6e4", 50: "#ea8bb0", 75: "#ea30a6", 100: "#ab2976" }};
+
+            if (perc === 0 || perc === "NaN"){
+                return "#000000";
+            }else if (perc <= 25){
+                return colors[sent][25];
+            } else if (perc <= 50){
+                return colors[sent][50];
+            } else if (perc <= 75){
+                return colors[sent][75];
+            } else {
+                return colors[sent][100];
+            }
+        }
+
+    }
     </script>
 
     <script>
