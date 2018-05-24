@@ -89,22 +89,20 @@ body {
 }
 
 #info-table{
-    /*border-style: solid;
-    border-width: 1px;
-    border-color: #07a0aa;*/
-    /*visibility: hidden;*/
+
 }
 
 #info-table th {
-    /*border-style: solid;
-    border-width: 1px;
-    border-color: #07a0aa;*/
+
 }
 
 #info-table td {
-    /*border-style: solid;
-    border-width: 1px;
-    border-color: #07a0aa;*/
+
+}
+
+#map-legend {
+    display: block;
+    top: 0;
 }
 
 

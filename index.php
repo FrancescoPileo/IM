@@ -162,6 +162,7 @@
 
         var g = svg.append("g");
 
+
         d3.json("json/regioni.json", function (error, it) {
             if (error) throw error;
 
@@ -182,9 +183,35 @@
                 }))
                 .attr("id", "state-borders")
                 .attr("d", path);
-            console.log("fdata", fData);
+            //console.log("fdata", fData);
 
         });
+
+        var mapColors = {positivo:["#b6fecd", "#97fed1", "#00de82", "#00ba63" ],
+            neutrale:["#fff682", "#ffe031", "#ffab1c", "#e08e1c" ],
+            negativo:["#ffd6e4", "#ea8bb0", "#ea30a6", "#ab2976" ]};
+
+        // function to handle legend.
+        function mapLegend(lD){
+            var leg = {};
+
+            console.log(lD[25]);
+            // create table for legend.
+            var legend = d3.select("#map").append("div").attr('id','map-legend').append("table");
+
+            // create one row per segment.
+            var tr = legend.append("tbody").selectAll("tr").data(lD).enter().append("tr");
+
+            // create the first column for each segment.
+            tr.append("td").append("svg").attr("width", '16').attr("height", '16').append("rect")
+                .attr("width", '16').attr("height", '16')
+                .attr("fill",function(d){ return d; });
+
+            // create the second column for each segment.
+            tr.append("td").text(function(d){ return d;});
+
+            return leg;
+        }
 
 
 
@@ -219,7 +246,7 @@
 
                 // call update functions of pie-chart and legend.
                 pC.update(nD);
-                leg.update(nD);
+                pieLeg.update(nD);
 
             } else {
                 x = width / 2;
@@ -231,7 +258,7 @@
                 document.getElementById("info-regione").innerText = "ITALIA";
 
                 pC.update(tF);
-                leg.update(tF);
+                pieLeg.update(tF);
             }
 
             g.selectAll("path")
@@ -313,7 +340,7 @@
 
 
         // function to handle legend.
-        function legend(lD){
+        function pieLegend(lD){
             var leg = {};
 
             // create table for legend.
@@ -351,7 +378,12 @@
             };
 
             function getLegend(d,aD){ // Utility function to compute percentage.
-                return d3.format("%")(d.freq/d3.sum(aD.map(function(v){ return v.freq; })));
+                var sum = d3.sum(aD.map(function(v){ return v.freq; }));
+                if (sum > 0){
+                    return d3.format("%")(d.freq/sum);
+                } else {
+                    return " ";
+                }
             }
             return leg;
         }
@@ -361,7 +393,8 @@
         });
 
         var pC = pieChart(tF); // create the pie-chart.
-        var leg= legend(tF);  // create the legend.
+        var pieLeg= pieLegend(tF);  // create the legend.
+        var mapLeg = mapLegend(mapColors["positivo"]);
 
 
         //Filtro sentiment
@@ -378,6 +411,7 @@
                         //console.log(state.State);
                         document.getElementById(state.State).setAttribute("style", "fill:" + getColor(d, perc));
                     }
+
                     //console.log(state.State + ": " + valore + " su " + somma + " ("+ perc +")");
                 });
             } else {
@@ -388,19 +422,14 @@
         }
 
         function getColor(sent, perc){
-
-            var colors = {positivo:{25: "#b6fecd", 50: "#97fed1", 75: "#00de82", 100: "#00ba63" },
-                            neutrale:{25: "#fff682", 50: "#ffe031", 75: "#ffab1c", 100: "#e08e1c" },
-                            negativo:{25: "#ffd6e4", 50: "#ea8bb0", 75: "#ea30a6", 100: "#ab2976" }};
-
             if (perc <= 25){
-                return colors[sent][25];
+                return mapColors[sent][0];
             } else if (perc <= 50){
-                return colors[sent][50];
+                return mapColors[sent][1];
             } else if (perc <= 75){
-                return colors[sent][75];
+                return mapColors[sent][2];
             } else {
-                return colors[sent][100];
+                return mapColors[sent][3];
             }
         }
 
