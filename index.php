@@ -14,7 +14,12 @@
 
 <body>
     <div id="navbar">
-        <a href="#home" id="logo">Tourism Sentiment Analysis</a>
+        <div id="logo">
+            <img class="smiles" src="img/Positive.png">
+            <img class="smiles" src="img/Neutral.png">
+            <img class="smiles" src="img/Negative.png">
+        </div>
+        <a href="#home" id="site-name">Tourism Sentiment Analysis</a>
     </div>
 
     <div class="content">
@@ -45,7 +50,7 @@
                 <div class="filter-name"> Periodo: <br></div>
                 <div class="filter-content">
                     <select id="inputState" class="form-control">
-                        <option value=""> </option>
+                        <option value="" disabled selected> -Seleziona Mese- </option>
                         <option value="gen">Gennaio</option>
                         <option value="feb">Febbraio</option>
                         <option value="mar">Marzo</option>
@@ -60,7 +65,7 @@
                         <option value="dic">Dicembre</option>
                     </select>
                     <select id="inputState" class="form-control">
-                        <option value=""> </option>
+                        <option value="" disabled selected> -Seleziona Anno- </option>
                         <option value="2016">2016</option>
                         <option value="2017">2017</option>
                         <option value="2018">2018</option>

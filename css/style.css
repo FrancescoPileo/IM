@@ -10,7 +10,28 @@ body {
     padding: 0px 10px;
 }
 
-#logo {
+.smiles {
+    top:10px;
+    display: inline-block;
+    padding: 3px;
+    /*margin: 15px;  margin: 20px was off */
+    float: left;
+    height: 60px;
+    width: auto; /* correct proportions to specified height */
+    transition: transform .2s;
+    vertical-align: middle;
+}
+.smiles:hover{
+    transform: scale(1.2);
+}
+
+#logo{
+    display: inline-block;
+    float: left;
+    margin: 5px;
+}
+
+#site-name{
     font-size: xx-large;
 }
 
@@ -22,8 +43,8 @@ body {
     height: 100%; /* Full-height: remove this if you want "auto" height */
     width: 200px; /* Set the width of the sidebar */
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
-    z-index: 1; /* Stay on top */
-    top: 60px; /* Stay at the top */
+    z-index: -1; /* Stay on top */
+    top: 80px; /* Stay at the top */
     left: 0;
     background-color: #ffffff; /* Black */
     overflow-x: hidden; /* Disable horizontal scroll */
@@ -62,6 +83,9 @@ body {
     display: block;
 }
 
+    .form-control{
+        margin: 2px 2px 6px 2px;
+    }
 
     .sidenav .filter-content {
         font-size: 18px;
@@ -148,10 +172,11 @@ body {
 /* ------------------------------------ Navbar ------------------------------------ */
 /* Style the navbar */
 #navbar {
-    z-index: 2;
+    z-index: 1;
     overflow: hidden;
     background-color: #838383;
-    height: 60px;
+    height: 80px;
+    padding: 5px;
 }
 
 /* Navbar links */
@@ -160,7 +185,7 @@ body {
     display: block;
     color: #ffffff;
     text-align: center;
-    padding: 14px;
+    padding: 14px 14px 14px 0px;
     text-decoration: none;
 }
 
