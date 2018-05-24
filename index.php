@@ -4,7 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/style.css">
-    <script src="//d3js.org/d3.v3.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">    <script src="//d3js.org/d3.v3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
     <script src="//d3js.org/topojson.v1.min.js"></script>
     <?php include_once 'DbConnection.php'; ?>
 </head>
@@ -25,16 +28,24 @@
             <div class="filter">
                 <div class="filter-name"> Sentiment: <br> </div>
                 <div class="filter-content">
-                    <input type="radio" name="radio-sentiment" value="all" checked>Tutti<br>
-                    <input type="radio" name="radio-sentiment" value="pos" >Positivo<br>
-                    <input type="radio" name="radio-sentiment" value="neu" >Neutro<br>
-                    <input type="radio" name="radio-sentiment" value="neg" >Negativo<br>
+                        <label class="btn btn-primary" >
+                            <input type="radio" hidden id="option1" autocomplete="off" name="radio-sentiment" value="all" checked> Tutti
+                        </label>
+                        <label class="btn btn-success">
+                            <input type="radio" hidden id="option2" autocomplete="off" name="radio-sentiment" value="pos" > Positivo
+                        </label>
+                        <label class="btn btn-warning">
+                            <input type="radio" hidden id="option3" autocomplete="off" name="radio-sentiment" value="neu" > Neutro
+                        </label>
+                        <label class="btn btn-danger">
+                            <input type="radio" hidden id="option4" autocomplete="off" name="radio-sentiment" value="neg" > Negativo
+                        </label>
                 </div>
             </div>
             <div class="filter">
                 <div class="filter-name"> Periodo: <br></div>
                 <div class="filter-content">
-                    <select>
+                    <select id="inputState" class="form-control">
                         <option value=""> </option>
                         <option value="gen">Gennaio</option>
                         <option value="feb">Febbraio</option>
@@ -49,13 +60,13 @@
                         <option value="nov">Novembre</option>
                         <option value="dic">Dicembre</option>
                     </select>
-                    <select>
+                    <select id="inputState" class="form-control">
                         <option value=""> </option>
                         <option value="2016">2016</option>
                         <option value="2017">2017</option>
                         <option value="2018">2018</option>
                     </select>
-                    <input type="button" value="Ok">
+                    <input type="button" class="btn btn-sm btn-secondary" value="Ok">
                 </div>
             </div>
             <a href="#">About</a>
@@ -162,7 +173,6 @@
 
         var g = svg.append("g");
 
-
         d3.json("json/regioni.json", function (error, it) {
             if (error) throw error;
 
@@ -241,6 +251,9 @@
                         return {type: s, freq: st.freq[s]};
                     });
 
+                document.getElementById(st.State).classList.add("selected");
+
+
                 //visualizza il nome della regione
                 document.getElementById("info-regione").innerText =  d.properties.name.toString();
 
@@ -275,27 +288,41 @@
         }
 
 
-        /*function updateMapColors(fData){
+        function updateMapColors(fData){
 
             fData.forEach(function (state) {
-                var pos = state.freq["positivo"];
-                var neu = state.freq["neutrale"];
-                var neg = state.freq["negativo"];
-                var maxSent = getMaxSentiment(pos, neu, neg);
-                var somma = state.freq["positivo"] + state.freq["neutrale"] + state.freq["negativo"];
-                var perc = 0;
-                if (somma > 0) {
-                    perc = (maxSent / somma) * 100;
-                    document.getElementsByName(state.State)[0].setAttribute("style", "fill:" + getColor(maxSent, perc));
+                    console.log("state", state);
+
+                    var pos = state.freq["positivo"];
+                    var neu = state.freq["neutrale"];
+                    var neg = state.freq["negativo"];
+                    var maxSent = getMaxSentiment(pos, neu, neg);
+                    var somma = state.freq["positivo"] + state.freq["neutrale"] + state.freq["negativo"];
+                    var perc = 0;
+                    if (somma > 0) {
+                        perc = (maxSent / somma) * 100;
+                        document.getElementById(state.State).setAttribute("style", "fill:" + getColor(maxSent, perc));
+
+                    }
+
+                    console.log("colour", getColor(maxSent, perc));
+
+
                 }
-                d3.select("#map").select("path").select(state.name).style("fill" , state.style);
-            }
-        )}*/
+            )}
+
+        function getMaxSentiment(pos, neu, neg) {
+            var maxValue;
+            if (pos >= neu) {maxValue = "positivo"} else maxValue = "neutrale";
+            if (neg >= neu) {maxValue = "negativo"} else maxValue = "neutrale";
+            return maxValue;
+
+        }
 
         /* INFORMAZIONI */
         var id = "#info-data";
         var barColor = 'steelblue';
-        function segColor(c){ return {positivo:"#00ba63", neutrale:"#e08e1c", negativo:"#ab0600"}[c]; }
+        function segColor(c){ return {positivo:"#00C200", neutrale:"#e08e1c", negativo:"#FF0000"}[c]; }
 
         // function to handle pieChart.
         function pieChart(pD){
@@ -530,60 +557,9 @@
 
     ];
 
-    /*function updateMapColors(fData){
 
-        fData.forEach(function (state) {
-            console.log("state", state);
-
-            var pos = state.freq["positivo"];
-                var neu = state.freq["neutrale"];
-                var neg = state.freq["negativo"];
-                var maxSent = getMaxSentiment(pos, neu, neg);
-                var somma = state.freq["positivo"] + state.freq["neutrale"] + state.freq["negativo"];
-                var perc = 0;
-                if (somma > 0) {
-                    perc = (maxSent / somma) * 100;
-                }
-                console.log("colour", getColor(maxSent, perc));
-
----------------------------- non riesco a prendere la regione e a cambiarli colore in base al sentiment ---------------------
-
-                var array = document.getElementById("states");
-                console.log("array", array);
-                var regione = state.name == d3.select("#map").select("path").select("states").properties.name.toLowerCase()) {
-
-                }
-                d3.select("#map").select("path").select(state.name).style("colour" , getColor(maxSent, perc));
-
-            }
-        )}
-    function getMaxSentiment(pos, neu, neg) {
-        var maxValue;
-        if (pos >= neu) {maxValue = "positivo"} else maxValue = "neutrale";
-        if (neg >= neu) {maxValue = "negativo"} else maxValue = "neutrale";
-        return maxValue;
-
-    }
-
-    function getColor(sent, perc){
-
-        var colors = {positivo:{25: "#b6fecd", 50: "#97fed1", 75: "#00de82", 100: "#00ba63" },
-            neutrale:{25: "#fff682", 50: "#ffe031", 75: "#ffab1c", 100: "#e08e1c" },
-            negativo:{25: "#ffd6e4", 50: "#ea8bb0", 75: "#ea30a6", 100: "#ab2976" }};
-
-        if (perc <= 25){
-            return colors[sent][25];
-        } else if (perc <= 50){
-            return colors[sent][50];
-        } else if (perc <= 75){
-            return colors[sent][75];
-        } else {
-            return colors[sent][100];
-        }
-    }*/
 
     drawMap(freqData);
-    //updateMapColors(freqData);
 
 
 </script>
