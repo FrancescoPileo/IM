@@ -182,7 +182,10 @@
                 }))
                 .attr("id", "state-borders")
                 .attr("d", path);
-            console.log("fdata", fData);
+
+            //console.log("fdata", fData);
+
+            updateMapColors(fData);
 
         });
 
@@ -213,6 +216,8 @@
                     nD = d3.keys(st.freq).map(function (s) {
                         return {type: s, freq: st.freq[s]};
                     });
+
+                document.getElementById(st.State).classList.add("selected");
 
                 //visualizza il nome della regione
                 document.getElementById("info-regione").innerText =  d.properties.name.toString();
@@ -251,19 +256,33 @@
         /*function updateMapColors(fData){
 
             fData.forEach(function (state) {
-                var pos = state.freq["positivo"];
-                var neu = state.freq["neutrale"];
-                var neg = state.freq["negativo"];
-                var maxSent = getMaxSentiment(pos, neu, neg);
-                var somma = state.freq["positivo"] + state.freq["neutrale"] + state.freq["negativo"];
-                var perc = 0;
-                if (somma > 0) {
-                    perc = (maxSent / somma) * 100;
-                    document.getElementsByName(state.State)[0].setAttribute("style", "fill:" + getColor(maxSent, perc));
+                    console.log("state", state);
+
+                    var pos = state.freq["positivo"];
+                    var neu = state.freq["neutrale"];
+                    var neg = state.freq["negativo"];
+                    var maxSent = getMaxSentiment(pos, neu, neg);
+                    var somma = state.freq["positivo"] + state.freq["neutrale"] + state.freq["negativo"];
+                    var perc = 0;
+                    if (somma > 0) {
+                        perc = (maxSent / somma) * 100;
+                        document.getElementById(state.State).setAttribute("style", "fill:" + getColor(maxSent, perc));
+
+                    }
+
+                    console.log("colour", getColor(maxSent, perc));
+
+
                 }
-                d3.select("#map").select("path").select(state.name).style("fill" , state.style);
-            }
-        )}*/
+            )}
+
+        function getMaxSentiment(pos, neu, neg) {
+            var maxValue;
+            if (pos >= neu) {maxValue = "positivo"} else maxValue = "neutrale";
+            if (neg >= neu) {maxValue = "negativo"} else maxValue = "neutrale";
+            return maxValue;
+
+        }*/
 
         /* INFORMAZIONI */
         var id = "#info-data";
@@ -389,9 +408,9 @@
 
         function getColor(sent, perc){
 
-            var colors = {positivo:{25: "#b6fecd", 50: "#97fed1", 75: "#00de82", 100: "#00ba63" },
+            var colors = {positivo:{25: "#80FF80", 50: "#41FF32", 75: "#00C200", 100: "#004200" },
                             neutrale:{25: "#fff682", 50: "#ffe031", 75: "#ffab1c", 100: "#e08e1c" },
-                            negativo:{25: "#ffd6e4", 50: "#ea8bb0", 75: "#ea30a6", 100: "#ab2976" }};
+                            negativo:{25: "#FF9F71", 50: "#FF0000", 75: "#E10000", 100: "#C20000" }};
 
             if (perc <= 25){
                 return colors[sent][25];
@@ -501,60 +520,9 @@
 
     ];
 
-    /*function updateMapColors(fData){
 
-        fData.forEach(function (state) {
-            console.log("state", state);
-
-            var pos = state.freq["positivo"];
-                var neu = state.freq["neutrale"];
-                var neg = state.freq["negativo"];
-                var maxSent = getMaxSentiment(pos, neu, neg);
-                var somma = state.freq["positivo"] + state.freq["neutrale"] + state.freq["negativo"];
-                var perc = 0;
-                if (somma > 0) {
-                    perc = (maxSent / somma) * 100;
-                }
-                console.log("colour", getColor(maxSent, perc));
-
----------------------------- non riesco a prendere la regione e a cambiarli colore in base al sentiment ---------------------
-
-                var array = document.getElementById("states");
-                console.log("array", array);
-                var regione = state.name == d3.select("#map").select("path").select("states").properties.name.toLowerCase()) {
-
-                }
-                d3.select("#map").select("path").select(state.name).style("colour" , getColor(maxSent, perc));
-
-            }
-        )}
-    function getMaxSentiment(pos, neu, neg) {
-        var maxValue;
-        if (pos >= neu) {maxValue = "positivo"} else maxValue = "neutrale";
-        if (neg >= neu) {maxValue = "negativo"} else maxValue = "neutrale";
-        return maxValue;
-
-    }
-
-    function getColor(sent, perc){
-
-        var colors = {positivo:{25: "#b6fecd", 50: "#97fed1", 75: "#00de82", 100: "#00ba63" },
-            neutrale:{25: "#fff682", 50: "#ffe031", 75: "#ffab1c", 100: "#e08e1c" },
-            negativo:{25: "#ffd6e4", 50: "#ea8bb0", 75: "#ea30a6", 100: "#ab2976" }};
-
-        if (perc <= 25){
-            return colors[sent][25];
-        } else if (perc <= 50){
-            return colors[sent][50];
-        } else if (perc <= 75){
-            return colors[sent][75];
-        } else {
-            return colors[sent][100];
-        }
-    }*/
 
     drawMap(freqData);
-    //updateMapColors(freqData);
 
 
 </script>

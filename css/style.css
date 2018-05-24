@@ -122,13 +122,13 @@ body {
     fill: #07a0aa;
 }
 
-#states .active {
-    fill: orange;
+#states .selected {
+    fill: #002F80;
 }
 
-#states .selected {
+/*#states .selected {
     fill: darkseagreen;
-}
+}*/
 
 #state-borders {
     fill: none;
