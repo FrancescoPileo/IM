@@ -17,29 +17,28 @@
         <a href="#home" id="logo">Tourism Sentiment Analysis</a>
     </div>
 
-
-
     <div class="content">
         <div class="sidenav">
             <div class="filter">
                 <div class="filter-name">Filtri:</div>
             </div>
 
-            <div class="filter">
+            <div class="filter" id="filter-sentiment">
                 <div class="filter-name"> Sentiment: <br> </div>
-                <div class="filter-content">
-                        <label class="btn btn-primary" >
-                            <input type="radio" hidden id="option1" autocomplete="off" name="radio-sentiment" value="all" checked> Tutti
-                        </label>
-                        <label class="btn btn-success">
-                            <input type="radio" hidden id="option2" autocomplete="off" name="radio-sentiment" value="pos" > Positivo
-                        </label>
-                        <label class="btn btn-warning">
-                            <input type="radio" hidden id="option3" autocomplete="off" name="radio-sentiment" value="neu" > Neutro
-                        </label>
-                        <label class="btn btn-danger">
-                            <input type="radio" hidden id="option4" autocomplete="off" name="radio-sentiment" value="neg" > Negativo
-                        </label>
+                <div class="filter-content" >
+                    <label class="btn btn-primary" >
+                        <input type="radio" hidden id="option1" autocomplete="off" name="radio-sentiment" value="all" checked> Tutti
+                    </label>
+                    <label class="btn btn-success">
+                        <input type="radio" hidden id="option2" autocomplete="off" name="radio-sentiment" value="pos" > Positivo
+                    </label>
+                    <label class="btn btn-warning">
+                        <input type="radio" hidden id="option3" autocomplete="off" name="radio-sentiment" value="neu" > Neutro
+                    </label>
+                    <label class="btn btn-danger">
+                        <input type="radio" hidden id="option4" autocomplete="off" name="radio-sentiment" value="neg" > Negativo
+                    </label>
+
                 </div>
             </div>
             <div class="filter">
@@ -195,30 +194,52 @@
                 .attr("d", path);
             //console.log("fdata", fData);
 
+            //updateMapColors(fData);
+
         });
 
-        var mapColors = {positivo:["#b6fecd", "#97fed1", "#00de82", "#00ba63" ],
+        var mapColors = {positivo:["#80FF80", "#41FF32", "#00C200", "#004200" ],
             neutrale:["#fff682", "#ffe031", "#ffab1c", "#e08e1c" ],
-            negativo:["#ffd6e4", "#ea8bb0", "#ea30a6", "#ab2976" ]};
+            negativo:["#FF9F71", "#FF0000", "#E10000", "#C20000" ]};
 
         // function to handle legend.
         function mapLegend(lD){
+            var soglie = ["0-25%", "26-50%", "51-75%", "76-100%"];
+
             var leg = {};
 
             console.log(lD[25]);
             // create table for legend.
-            var legend = d3.select("#map").append("div").attr('id','map-legend').append("table");
+            var legend = d3.select("#filter-sentiment").select(".filter-content").append("div").attr('id','map-legend').append("table");
+            
 
             // create one row per segment.
             var tr = legend.append("tbody").selectAll("tr").data(lD).enter().append("tr");
 
             // create the first column for each segment.
-            tr.append("td").append("svg").attr("width", '16').attr("height", '16').append("rect")
+            tr.append("td").append("svg").attr("width", '16').attr("height", '16').append("rect").attr("class", "map-legend-color")
                 .attr("width", '16').attr("height", '16')
                 .attr("fill",function(d){ return d; });
 
             // create the second column for each segment.
-            tr.append("td").text(function(d){ return d;});
+            tr.data(soglie).append("td").text(function(d){ return d;});
+
+            leg.update = function(nD){
+
+                d3.select("#map-legend").attr("style", "max-height: 10em;");
+
+                // update the data attached to the row elements.
+                var l = legend.select("tbody").selectAll("tr").data(nD);
+
+                //update the colors
+                l.select(".map-legend-color").attr("fill", function (d) {
+                   return d;
+                });
+            };
+
+            leg.hide = function () {
+                d3.select("#map-legend").attr("style", "max-height: 0;");
+            };
 
             return leg;
         }
@@ -291,7 +312,7 @@
         function updateMapColors(fData){
 
             fData.forEach(function (state) {
-                    console.log("state", state);
+                    //console.log("state", state);
 
                     var pos = state.freq["positivo"];
                     var neu = state.freq["neutrale"];
@@ -305,7 +326,7 @@
 
                     }
 
-                    console.log("colour", getColor(maxSent, perc));
+                    //console.log("colour", getColor(maxSent, perc));
 
 
                 }
@@ -422,6 +443,7 @@
         var pC = pieChart(tF); // create the pie-chart.
         var pieLeg= pieLegend(tF);  // create the legend.
         var mapLeg = mapLegend(mapColors["positivo"]);
+        mapLeg.hide();
 
 
         //Filtro sentiment
@@ -438,12 +460,13 @@
                         //console.log(state.State);
                         document.getElementById(state.State).setAttribute("style", "fill:" + getColor(d, perc));
                     }
-
+                    mapLeg.update(mapColors[d]);
                     //console.log(state.State + ": " + valore + " su " + somma + " ("+ perc +")");
                 });
             } else {
                 console.log("Tutti");
                 fData.forEach(function (state) { document.getElementById(state.State).removeAttribute("style"); });
+                mapLeg.hide();
             }
 
         }

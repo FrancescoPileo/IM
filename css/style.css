@@ -69,6 +69,14 @@ body {
         display: block;
     }
 
+
+    .sidenav .filter-content #map-legend{
+        max-height: 0;
+
+        overflow:hidden;
+        transition: max-height 0.5s, overflow 0s;
+    }
+
 /* When you mouse over the navigation links, change their color */
 .sidenav a:hover {
     color: #b2b2b2;
