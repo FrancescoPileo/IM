@@ -23,8 +23,8 @@
     $province = $_POST['province'];
     $city = $_POST['city'];
 
-    $sql = "UPDATE Tweet SET Country='" . $country . "', Region='" . $region .
-                            "', Province='" . $province . "', City='" . $city . "'  WHERE Id = " . $id;
+    $sql = "UPDATE Tweet SET Country=\"" . $country . "\", Region=\"" . $region .
+                            "\", Province=\"" . $province . "\", City=\"" . $city . "\"  WHERE Id = " . $id;
 
     $result = mysqli_query($conn, $sql) or die(mysqli_error($conn));
 

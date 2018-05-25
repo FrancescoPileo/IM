@@ -538,9 +538,9 @@
         ,{State:'veneto',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "veneto"); ?>,
                 neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "veneto"); ?>,
                 negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "veneto"); ?>}}
-        ,{State:'friuli venezia giulia',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "friuli venezia giulia"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "friuli venezia giulia"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "friuli venezia giulia"); ?>}}
+        ,{State:'friuli venezia giulia',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "friuli-venezia giulia"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "friuli-venezia giulia"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "friuli-venezia giulia"); ?>}}
         ,{State:'liguria',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "liguria"); ?>,
                 neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "liguria"); ?>,
                 negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "liguria"); ?>}}

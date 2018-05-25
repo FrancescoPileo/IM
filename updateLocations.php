@@ -10,11 +10,11 @@
     <?php
         include_once 'DbConnection.php';
 
-        $input = getIdLatLon(DbConnection());
+        $input = getNoCountry(DbConnection());
     ?>
 </head>
 <body>
-    <input type="button" value="Localizza" id="submit">
+
     <table style="width:100%" id="table">
         <tr>
             <th>Id</th>
@@ -41,11 +41,12 @@
             }
         ?>
     </table>
+    <input type="button" value="Localizza" id="submit">
 
     <script>
         var geocoder;
         var rows = document.getElementById("table").rows;
-        var nextRow = 3010; //1
+        var nextRow = 1;
         var delay = 1000;
 
         function init() {
@@ -57,7 +58,7 @@
         }
 
         function theNext() {
-            if (nextRow < 4000) {
+            if (nextRow < rows.length) {
                 setTimeout('getLocation("'+ rows[nextRow].cells[0].innerHTML.toString() +
                     '", "' + rows[nextRow].cells[1].innerHTML.toString() +
                     '", "' + rows[nextRow].cells[2].innerHTML.toString() + '",theNext)', delay);

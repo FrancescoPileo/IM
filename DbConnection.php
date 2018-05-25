@@ -57,6 +57,29 @@ function getIdLatLon($conn){
     return $return;
 }
 
+function getNoCountry($conn){
+    $return = null;
+    $sql = "SELECT Id, Lat, Lon FROM Tweet WHERE Country=''";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        // output data of each row
+        $return = array();
+        $i = 0;
+        while($row = $result->fetch_assoc()) {
+            $return[$i] = array($row["Id"], $row["Lat"], $row["Lon"]);
+            $i++;
+            //echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+        }
+    } else {
+        echo "0 results";
+    }
+    $conn->close();
+    return $return;
+}
+
+
+
+
 function updateTweetLocation($conn){
     $return = false;
     $id = mysql_real_escape_string(html_entities($_POST['tweet_id']));
