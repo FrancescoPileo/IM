@@ -4,17 +4,23 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/style.css">
-    <script src="//d3js.org/d3.v3.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">    <script src="//d3js.org/d3.v3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
     <script src="//d3js.org/topojson.v1.min.js"></script>
     <?php include_once 'DbConnection.php'; ?>
 </head>
 
 <body>
     <div id="navbar">
-        <a href="#home" id="logo">Tourism Sentiment Analysis</a>
+        <div id="logo">
+            <img class="smiles" src="img/Positive.png">
+            <img class="smiles" src="img/Neutral.png">
+            <img class="smiles" src="img/Negative.png">
+        </div>
+        <a href="#home" id="site-name">Tourism Sentiment Analysis</a>
     </div>
-
-
 
     <div class="content">
         <div class="sidenav">
@@ -22,20 +28,30 @@
                 <div class="filter-name">Filtri:</div>
             </div>
 
-            <div class="filter">
+            <div class="filter" id="filter-sentiment">
                 <div class="filter-name"> Sentiment: <br> </div>
-                <div class="filter-content">
-                    <input type="radio" name="radio-sentiment" value="all" checked>Tutti<br>
-                    <input type="radio" name="radio-sentiment" value="pos" >Positivo<br>
-                    <input type="radio" name="radio-sentiment" value="neu" >Neutro<br>
-                    <input type="radio" name="radio-sentiment" value="neg" >Negativo<br>
+                <div class="filter-content" >
+                    <div data-toggle="buttons" id="toggles-sentiment">
+                        <label class="btn btn-primary">
+                            <input type="radio" hidden id="option1" autocomplete="off" name="radio-sentiment" value="all" checked> Tutti
+                        </label>
+                        <label class="btn btn-success">
+                            <input type="radio" hidden id="option2" autocomplete="off" name="radio-sentiment" value="pos" > Positivo
+                        </label>
+                        <label class="btn btn-warning">
+                            <input type="radio" hidden id="option3" autocomplete="off" name="radio-sentiment" value="neu" > Neutro
+                        </label>
+                        <label class="btn btn-danger">
+                            <input type="radio" hidden id="option4" autocomplete="off" name="radio-sentiment" value="neg" > Negativo
+                        </label>
+                    </div>
                 </div>
             </div>
             <div class="filter">
                 <div class="filter-name"> Periodo: <br></div>
                 <div class="filter-content">
-                    <select>
-                        <option value=""> </option>
+                    <select id="inputState" class="form-control">
+                        <option value="" disabled selected> -Seleziona Mese- </option>
                         <option value="gen">Gennaio</option>
                         <option value="feb">Febbraio</option>
                         <option value="mar">Marzo</option>
@@ -49,13 +65,13 @@
                         <option value="nov">Novembre</option>
                         <option value="dic">Dicembre</option>
                     </select>
-                    <select>
-                        <option value=""> </option>
+                    <select id="inputState" class="form-control">
+                        <option value="" disabled selected> -Seleziona Anno- </option>
                         <option value="2016">2016</option>
                         <option value="2017">2017</option>
                         <option value="2018">2018</option>
                     </select>
-                    <input type="button" value="Ok">
+                    <input type="button" class="btn btn-sm btn-secondary" value="Ok">
                 </div>
             </div>
             <a href="#">About</a>
@@ -169,7 +185,7 @@
                 .data(topojson.feature(it, it.objects.sub).features)
                 .enter().append("path")
                 .attr("d", path)
-                .attr("name", function (d) {
+                .attr("id", function (d) {
                     return d.properties.name.toLowerCase()
                 })
                 .on("click", clicked);
@@ -180,7 +196,59 @@
                 }))
                 .attr("id", "state-borders")
                 .attr("d", path);
+            //console.log("fdata", fData);
+
+            //updateMapColors(fData);
+
         });
+
+        var mapColors = {positivo:["#80FF80", "#41FF32", "#00C200", "#004200" ],
+            neutrale:["#fff682", "#ffe031", "#ffab1c", "#e08e1c" ],
+            negativo:["#FF9F71", "#FF0000", "#E10000", "#C20000" ]};
+
+        // function to handle legend.
+        function mapLegend(lD){
+            var soglie = ["0-25%", "26-50%", "51-75%", "76-100%"];
+
+            var leg = {};
+
+            console.log(lD[25]);
+            // create table for legend.
+            var legend = d3.select("#filter-sentiment").select(".filter-content").append("div").attr('id','map-legend').append("table");
+            
+
+            // create one row per segment.
+            var tr = legend.append("tbody").selectAll("tr").data(lD).enter().append("tr");
+
+            // create the first column for each segment.
+            tr.append("td").append("svg").attr("width", '16').attr("height", '16').append("rect").attr("class", "map-legend-color")
+                .attr("width", '16').attr("height", '16')
+                .attr("fill",function(d){ return d; });
+
+            // create the second column for each segment.
+            tr.data(soglie).append("td").text(function(d){ return d;});
+
+            leg.update = function(nD){
+
+                d3.select("#map-legend").attr("style", "max-height: 10em;");
+
+                // update the data attached to the row elements.
+                var l = legend.select("tbody").selectAll("tr").data(nD);
+
+                //update the colors
+                l.select(".map-legend-color").attr("fill", function (d) {
+                   return d;
+                });
+            };
+
+            leg.hide = function () {
+                d3.select("#map-legend").attr("style", "max-height: 0;");
+            };
+
+            return leg;
+        }
+
+
 
 
         function clicked(d) {
@@ -208,12 +276,15 @@
                         return {type: s, freq: st.freq[s]};
                     });
 
+                document.getElementById(st.State).classList.add("selected");
+
+
                 //visualizza il nome della regione
                 document.getElementById("info-regione").innerText =  d.properties.name.toString();
 
                 // call update functions of pie-chart and legend.
                 pC.update(nD);
-                leg.update(nD);
+                pieLeg.update(nD);
 
             } else {
                 x = width / 2;
@@ -225,7 +296,7 @@
                 document.getElementById("info-regione").innerText = "ITALIA";
 
                 pC.update(tF);
-                leg.update(tF);
+                pieLeg.update(tF);
             }
 
             g.selectAll("path")
@@ -238,30 +309,45 @@
                 .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
                 .style("stroke-width", 1.5 / k + "px");
 
-        }
-
-
-        function updateMapColors(d){
-            console.log(d.value);
-            /*d3.select("#map").selectAll("path").call(function (d) {
-                var st = fData.filter(function (s) {
-                        return s.State == d.properties.name.toLowerCase();
-                    })[0],
-                    nD = d3.keys(st.freq).map(function (s) {
-                        return {type: s, freq: st.freq[s]};
-                    });
-
-                console.log(d.properties.name.toLowerCase());
-            });*/
-
 
         }
 
+
+        function updateMapColors(fData){
+
+            fData.forEach(function (state) {
+                    //console.log("state", state);
+
+                    var pos = state.freq["positivo"];
+                    var neu = state.freq["neutrale"];
+                    var neg = state.freq["negativo"];
+                    var maxSent = getMaxSentiment(pos, neu, neg);
+                    var somma = state.freq["positivo"] + state.freq["neutrale"] + state.freq["negativo"];
+                    var perc = 0;
+                    if (somma > 0) {
+                        perc = (maxSent / somma) * 100;
+                        document.getElementById(state.State).setAttribute("style", "fill:" + getColor(maxSent, perc));
+
+                    }
+
+                    //console.log("colour", getColor(maxSent, perc));
+
+
+                }
+            )}
+
+        function getMaxSentiment(pos, neu, neg) {
+            var maxValue;
+            if (pos >= neu) {maxValue = "positivo"} else maxValue = "neutrale";
+            if (neg >= neu) {maxValue = "negativo"} else maxValue = "neutrale";
+            return maxValue;
+
+        }
 
         /* INFORMAZIONI */
         var id = "#info-data";
         var barColor = 'steelblue';
-        function segColor(c){ return {positivo:"#00ba63", neutrale:"#e08e1c", negativo:"#ab2976"}[c]; }
+        function segColor(c){ return {positivo:"#00C200", neutrale:"#e08e1c", negativo:"#FF0000"}[c]; }
 
         // function to handle pieChart.
         function pieChart(pD){
@@ -306,7 +392,7 @@
 
 
         // function to handle legend.
-        function legend(lD){
+        function pieLegend(lD){
             var leg = {};
 
             // create table for legend.
@@ -344,7 +430,12 @@
             };
 
             function getLegend(d,aD){ // Utility function to compute percentage.
-                return d3.format("%")(d.freq/d3.sum(aD.map(function(v){ return v.freq; })));
+                var sum = d3.sum(aD.map(function(v){ return v.freq; }));
+                if (sum > 0){
+                    return d3.format("%")(d.freq/sum);
+                } else {
+                    return " ";
+                }
             }
             return leg;
         }
@@ -354,11 +445,13 @@
         });
 
         var pC = pieChart(tF); // create the pie-chart.
-        var leg= legend(tF);  // create the legend.
+        var pieLeg= pieLegend(tF);  // create the legend.
+        var mapLeg = mapLegend(mapColors["positivo"]);
+        mapLeg.hide();
 
 
         //Filtro sentiment
-        d3.selectAll('[name="radio-sentiment"]').data(["tutti", "positivo", "neutrale", "negativo"]).on("click", handleRadioSentiment);
+        d3.select("#toggles-sentiment").selectAll('.btn').data(["tutti", "positivo", "neutrale", "negativo"]).on("click", handleRadioSentiment);
 
         function handleRadioSentiment(d) {
             if (d !== "tutti") {
@@ -368,30 +461,29 @@
                     var perc = 0;
                     if (somma > 0) {
                         perc = (valore / somma) * 100;
-                        document.getElementsByName(state.State)[0].setAttribute("style", "fill:" + getColor(d, perc));
+                        //console.log(state.State);
+                        document.getElementById(state.State).setAttribute("style", "fill:" + getColor(d, perc));
                     }
-                    console.log(state.State + ": " + valore + " su " + somma + " ("+ perc +")");
+                    mapLeg.update(mapColors[d]);
+                    //console.log(state.State + ": " + valore + " su " + somma + " ("+ perc +")");
                 });
             } else {
                 console.log("Tutti");
-                fData.forEach(function (state) { document.getElementsByName(state.State)[0].removeAttribute("style"); });
+                fData.forEach(function (state) { document.getElementById(state.State).removeAttribute("style"); });
+                mapLeg.hide();
             }
 
         }
 
         function getColor(sent, perc){
-            var colors = {positivo:{25: "#b6fecd", 50: "#97fed1", 75: "#00de82", 100: "#00ba63" },
-                            neutrale:{25: "#fff682", 50: "#ffe031", 75: "#ffab1c", 100: "#e08e1c" },
-                            negativo:{25: "#ffd6e4", 50: "#ea8bb0", 75: "#ea30a6", 100: "#ab2976" }};
-
             if (perc <= 25){
-                return colors[sent][25];
+                return mapColors[sent][0];
             } else if (perc <= 50){
-                return colors[sent][50];
+                return mapColors[sent][1];
             } else if (perc <= 75){
-                return colors[sent][75];
+                return mapColors[sent][2];
             } else {
-                return colors[sent][100];
+                return mapColors[sent][3];
             }
         }
 
@@ -444,9 +536,9 @@
         ,{State:'veneto',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "veneto"); ?>,
                 neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "veneto"); ?>,
                 negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "veneto"); ?>}}
-        ,{State:'friuli venezia giulia',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "friuli venezia giulia"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "friuli venezia giulia"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "friuli venezia giulia"); ?>}}
+        ,{State:'friuli venezia giulia',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "friuli-venezia giulia"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "friuli-venezia giulia"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "friuli-venezia giulia"); ?>}}
         ,{State:'liguria',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "liguria"); ?>,
                 neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "liguria"); ?>,
                 negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "liguria"); ?>}}
@@ -492,7 +584,10 @@
 
     ];
 
+
+
     drawMap(freqData);
+
 
 </script>
 
