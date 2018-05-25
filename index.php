@@ -31,19 +31,20 @@
             <div class="filter" id="filter-sentiment">
                 <div class="filter-name"> Sentiment: <br> </div>
                 <div class="filter-content" >
-                    <label class="btn btn-primary" >
-                        <input type="radio" hidden id="option1" autocomplete="off" name="radio-sentiment" value="all" checked> Tutti
-                    </label>
-                    <label class="btn btn-success">
-                        <input type="radio" hidden id="option2" autocomplete="off" name="radio-sentiment" value="pos" > Positivo
-                    </label>
-                    <label class="btn btn-warning">
-                        <input type="radio" hidden id="option3" autocomplete="off" name="radio-sentiment" value="neu" > Neutro
-                    </label>
-                    <label class="btn btn-danger">
-                        <input type="radio" hidden id="option4" autocomplete="off" name="radio-sentiment" value="neg" > Negativo
-                    </label>
-
+                    <div data-toggle="buttons" id="toggles-sentiment">
+                        <label class="btn btn-primary">
+                            <input type="radio" hidden id="option1" autocomplete="off" name="radio-sentiment" value="all" checked> Tutti
+                        </label>
+                        <label class="btn btn-success">
+                            <input type="radio" hidden id="option2" autocomplete="off" name="radio-sentiment" value="pos" > Positivo
+                        </label>
+                        <label class="btn btn-warning">
+                            <input type="radio" hidden id="option3" autocomplete="off" name="radio-sentiment" value="neu" > Neutro
+                        </label>
+                        <label class="btn btn-danger">
+                            <input type="radio" hidden id="option4" autocomplete="off" name="radio-sentiment" value="neg" > Negativo
+                        </label>
+                    </div>
                 </div>
             </div>
             <div class="filter">
@@ -452,7 +453,7 @@
 
 
         //Filtro sentiment
-        d3.selectAll('[name="radio-sentiment"]').data(["tutti", "positivo", "neutrale", "negativo"]).on("click", handleRadioSentiment);
+        d3.select("#toggles-sentiment").selectAll('.btn').data(["tutti", "positivo", "neutrale", "negativo"]).on("click", handleRadioSentiment);
 
         function handleRadioSentiment(d) {
             if (d !== "tutti") {
