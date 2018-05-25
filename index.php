@@ -72,15 +72,12 @@
 
         <div id="contenitore">
             <div id="map" class="box">
-
             </div>
             <div id="info" class="box">
                 <table id="info-table">
                     <tr><td id="info-regione" align="center">ITALIA</td></tr>
                     <tr><td id="info-data" align="center"></td></tr>
-
                 </table>
-
             </div>
         </div>
 
@@ -132,6 +129,7 @@
     </script>
 
     <script>
+
         /*MAPPA*/
     function drawMap(fData) {
         var width = window.innerWidth * 3 / 5,
