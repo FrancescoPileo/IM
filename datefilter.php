@@ -17,13 +17,9 @@ $conn = new mysqli($host, $username, $password, $database);
 $month = intval($_GET['month']);
 $year = intval($_GET['year']);
 
-echo $month . " " . $year;
-
 if (!$conn) {
     die('Could not connect: ' . mysqli_error($conn));
 }
-
-mysqli_select_db($conn,"ajax_demo");
 
 $sql = "SELECT Region,SUM(if (Sentiment='pos', 1, 0)) as 'pos',SUM(if (Sentiment='neu', 1, 0)) as 'neu',SUM(if (Sentiment='neg', 1, 0)) as 'neg' FROM Tweet WHERE Country='italia' AND MONTH(Date)=" . $month .  " AND YEAR(Date)=" . $year
         . " GROUP BY Region";

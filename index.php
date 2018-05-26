@@ -71,7 +71,8 @@
                         <option value="2017">2017</option>
                         <option value="2018">2018</option>
                     </select>
-                    <input type="button" class="btn btn-sm btn-secondary" value="Ok">
+                    <input type="button" id="btn-datefilter-apply" class="btn btn-sm btn-secondary" value="Applica">
+                    <input type="button" id="btn-datefilter-cancel" class="btn btn-sm btn-secondary" value="Cancella">
                 </div>
             </div>
             <a href="#">About</a>
@@ -347,7 +348,7 @@
                     negativo:<?php echo getFrequencyByCountry(DbConnection(), 'neg', "ungheria"); ?>}}
 
         ];
-        console.log("freqdatastate", freqDataState);
+        //console.log("freqdatastate", freqDataState);
         dashboard('#dashboard',freqDataState);
     </script>
 
@@ -466,7 +467,6 @@
 
             var leg = {};
 
-            console.log(lD[25]);
             // create table for legend.
             var legend = d3.select("#filter-sentiment").select(".filter-content").append("div").attr('id','map-legend').append("table");
             
@@ -742,7 +742,7 @@
         }
 
         /* Filtro periodo */
-        document.getElementById("btn-datefilter").addEventListener("click", dateFilter);
+        document.getElementById("btn-datefilter-apply").addEventListener("click", dateFilter);
 
 
         function dateFilter(){
@@ -752,7 +752,6 @@
             var year = parseInt(selYear.options[selYear.selectedIndex].value);
 
             if (month !== 0 && year !== 0 ){
-                console.log("month:" + month + ", year:" + year);
                 if (window.XMLHttpRequest) {
                     // code for IE7+, Firefox, Chrome, Opera, Safari
                     xmlhttp = new XMLHttpRequest();
@@ -768,7 +767,7 @@
                         for(var i = 0; i < response.length; i++) {
                             var obj = response[i];
 
-                            console.log(obj.State);
+                            //console.log(obj.State);
                         }
                     }
                 };
