@@ -47,6 +47,39 @@ function getFrequencyByCountry($conn, $sentiment, $country){
     }
 }
 
+function getFrequencyAllCountries($conn){
+
+    if (!$conn) {
+        die('Could not connect: ' . mysqli_error($conn));
+    }
+
+    $sql = "SELECT Country ,SUM(if (Sentiment='pos', 1, 0)) as 'pos',SUM(if (Sentiment='neu', 1, 0)) as 'neu',SUM(if (Sentiment='neg', 1, 0)) as 'neg' FROM Tweet WHERE Country!='italia'"
+        . " GROUP BY Country";
+
+    $result = $conn->query($sql);
+
+    $jsonOBJ = array();
+
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+
+            $object = (Object) [
+                'State' => strtoupper($row['Country']),
+                'freq' => ['positivo' => intval($row['pos']), 'neutrale' => intval($row['neu']), 'negativo' => intval($row['neg'])]];
+            array_push($jsonOBJ, $object);
+        }
+
+    } else {
+        //nessuno stato straniero
+    }
+
+    mysqli_close($conn);
+
+    return json_encode($jsonOBJ);
+}
+
+
+
 
 function getIdLatLon($conn){
     $return = null;
@@ -104,6 +137,7 @@ function updateTweetLocation($conn){
 
     return $return;
 }
+
 
 
 ?>

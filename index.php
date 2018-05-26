@@ -348,6 +348,7 @@
                     negativo:<?php echo getFrequencyByCountry(DbConnection(), 'neg', "ungheria"); ?>}}
 
         ];
+        //var freqDataState=<?php /*echo getFrequencyAllCountries(DbConnection());*/ ?>;
         //console.log("freqdatastate", freqDataState);
         dashboard('#dashboard',freqDataState);
     </script>
