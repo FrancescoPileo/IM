@@ -50,28 +50,28 @@
             <div class="filter">
                 <div class="filter-name"> Periodo: <br></div>
                 <div class="filter-content">
-                    <select id="inputState" class="form-control">
-                        <option value="" disabled selected> -Seleziona Mese- </option>
-                        <option value="gen">Gennaio</option>
-                        <option value="feb">Febbraio</option>
-                        <option value="mar">Marzo</option>
-                        <option value="apr">Aprile</option>
-                        <option value="mag">Maggio</option>
-                        <option value="giu">Giugno</option>
-                        <option value="lug">Luglio</option>
-                        <option value="ago">Agosto</option>
-                        <option value="set">Settembre</option>
-                        <option value="ott">Ottobre</option>
-                        <option value="nov">Novembre</option>
-                        <option value="dic">Dicembre</option>
+                    <select id="sel-month-datefilter" class="form-control">
+                        <option value="0" disabled selected> -Seleziona Mese- </option>
+                        <option value="1">Gennaio</option>
+                        <option value="2">Febbraio</option>
+                        <option value="3">Marzo</option>
+                        <option value="4">Aprile</option>
+                        <option value="5">Maggio</option>
+                        <option value="6">Giugno</option>
+                        <option value="7">Luglio</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Settembre</option>
+                        <option value="10">Ottobre</option>
+                        <option value="11">Novembre</option>
+                        <option value="12">Dicembre</option>
                     </select>
-                    <select id="inputState" class="form-control">
-                        <option value="" disabled selected> -Seleziona Anno- </option>
+                    <select id="sel-year-datefilter" class="form-control">
+                        <option value="0" disabled selected> -Seleziona Anno- </option>
                         <option value="2016">2016</option>
                         <option value="2017">2017</option>
                         <option value="2018">2018</option>
                     </select>
-                    <input type="button" class="btn btn-sm btn-secondary" value="Ok">
+                    <input type="button" class="btn btn-sm btn-secondary" value="Ok" id="btn-datefilter">
                 </div>
             </div>
             <a href="#">About</a>
@@ -85,6 +85,8 @@
             <input id="submit" type="button" value="Geolocalizza">
             <input id="name" type="textbox">
         </div> -->
+
+
 
         <div id="contenitore">
             <div id="map" class="box">
@@ -100,7 +102,10 @@
             </div>
         </div>
 
-    <script>
+        <div id="json"></div>
+
+
+        <script>
         /* GEOLOCALIZZAZIONE */
        /* function init() {
             var geocoder = new google.maps.Geocoder();
@@ -214,7 +219,6 @@
 
             var leg = {};
 
-            console.log(lD[25]);
             // create table for legend.
             var legend = d3.select("#filter-sentiment").select(".filter-content").append("div").attr('id','map-legend').append("table");
             
@@ -489,6 +493,41 @@
             }
         }
 
+        /* Filtro periodo */
+        document.getElementById("btn-datefilter").addEventListener("click", dateFilter);
+
+
+        function dateFilter(){
+            var selMonth = document.getElementById("sel-month-datefilter");
+            var month = parseInt(selMonth.options[selMonth.selectedIndex].value);
+            var selYear = document.getElementById("sel-year-datefilter");
+            var year = parseInt(selYear.options[selYear.selectedIndex].value);
+
+            if (month !== 0 && year !== 0 ){
+                console.log("month:" + month + ", year:" + year);
+                if (window.XMLHttpRequest) {
+                    // code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp = new XMLHttpRequest();
+                } else {
+                    // code for IE6, IE5
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        //document.getElementById("json").innerHTML = this.responseText;
+                        var response = JSON.parse(this.responseText);
+
+                        for(var i = 0; i < response.length; i++) {
+                            var obj = response[i];
+
+                            console.log(obj.State);
+                        }
+                    }
+                };
+                xmlhttp.open("GET", "datefilter.php?month=" + month + "&year=" + year);
+                xmlhttp.send();
+            }
+        }
     }
     </script>
 
