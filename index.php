@@ -86,6 +86,8 @@
             <input id="name" type="textbox">
         </div> -->
 
+
+
         <div id="contenitore">
             <div id="map" class="box">
             </div>
@@ -97,6 +99,7 @@
             </div>
         </div>
 
+        <div id="json"></div>
 
         <div id="altriStati">
             <div id='dashboard'>
@@ -346,9 +349,10 @@
                 console.log("freqdatastate", freqDataState);
                 dashboard('#dashboard',freqDataState);
             </script>
-        </div>
+        </div>    <div id="json"></div>
 
-    <script>
+
+        <script>
         /* GEOLOCALIZZAZIONE */
        /* function init() {
             var geocoder = new google.maps.Geocoder();
@@ -738,6 +742,41 @@
             }
         }
 
+        /* Filtro periodo */
+        document.getElementById("btn-datefilter").addEventListener("click", dateFilter);
+
+
+        function dateFilter(){
+            var selMonth = document.getElementById("sel-month-datefilter");
+            var month = parseInt(selMonth.options[selMonth.selectedIndex].value);
+            var selYear = document.getElementById("sel-year-datefilter");
+            var year = parseInt(selYear.options[selYear.selectedIndex].value);
+
+            if (month !== 0 && year !== 0 ){
+                console.log("month:" + month + ", year:" + year);
+                if (window.XMLHttpRequest) {
+                    // code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp = new XMLHttpRequest();
+                } else {
+                    // code for IE6, IE5
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        //document.getElementById("json").innerHTML = this.responseText;
+                        var response = JSON.parse(this.responseText);
+
+                        for(var i = 0; i < response.length; i++) {
+                            var obj = response[i];
+
+                            console.log(obj.State);
+                        }
+                    }
+                };
+                xmlhttp.open("GET", "datefilter.php?month=" + month + "&year=" + year);
+                xmlhttp.send();
+            }
+        }
     }
     </script>
 
