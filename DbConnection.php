@@ -36,6 +36,17 @@ function getFrequencyByRegion($conn, $sentiment, $region){
     }
 }
 
+function getFrequencyByCountry($conn, $sentiment, $country){
+    $query = "SELECT COUNT(*) AS 'n' FROM Tweet WHERE Sentiment='" . $sentiment . "' AND Country=\"" . $country . "\"";
+    $ris = mysqli_fetch_assoc(mysqli_query($conn, $query));
+    $conn->close();
+    if ($ris['n']){
+        return $ris['n'];
+    } else {
+        return 0;
+    }
+}
+
 
 function getIdLatLon($conn){
     $return = null;
