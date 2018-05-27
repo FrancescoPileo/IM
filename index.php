@@ -142,9 +142,10 @@
                 labels.each(function () {
                     var strLabel = d3.select(this).html();
                     if (strLabel.length > 10){
+                        var words = strLabel.split(" ");
                         d3.select(this).html("");
-                        for (var i = 0; i < Math.ceil(strLabel.length / 10); i++){
-                            d3.select(this).append("tspan").attr("x", "0").attr("dy", "1em").html(strLabel.substring(10 * i, 10 * (i + 1)));
+                        for (var i = 0; i < words.length; i++){
+                            d3.select(this).append("tspan").attr("x", "0").attr("dy", "1em").html(words[i]);
                         }
                     }
 
