@@ -137,6 +137,19 @@
                     .attr("transform", "translate(0," + hGDim.h + ")")
                     .call(d3.svg.axis().scale(x).orient("bottom"));
 
+
+                var labels = d3.selectAll(".tick").selectAll("text");
+                labels.each(function () {
+                    var strLabel = d3.select(this).html();
+                    if (strLabel.length > 10){
+                        d3.select(this).html("");
+                        for (var i = 0; i < Math.ceil(strLabel.length / 10); i++){
+                            d3.select(this).append("tspan").attr("x", "0").attr("dy", "1em").html(strLabel.substring(10 * i, 10 * (i + 1)));
+                        }
+                    }
+
+                });
+
                 // Create function for y-axis map.
                 var y = d3.scale.linear().range([hGDim.h, 0])
                     .domain([0, d3.max(fD, function(d) { return d[1]; })]);
@@ -306,49 +319,8 @@
                 leg= legend(tF);  // create the legend.
         }
 
-        var freqDataState=[
-            {State:"AUSTRIA",freq:{positivo:<?php echo getFrequencyByCountry(DbConnection(), 'pos', "austria"); ?>,
-                    neutrale:<?php echo getFrequencyByCountry(DbConnection(), 'neu', "austria"); ?>,
-                    negativo:<?php echo getFrequencyByCountry(DbConnection(), 'neg', "austria"); ?>}}
-            ,{State:'BOZNIA',freq:{positivo:<?php echo getFrequencyByCountry(DbConnection(), 'pos', "bosnia ed erzegovina"); ?>,
-                    neutrale:<?php echo getFrequencyByCountry(DbConnection(), 'neu', "bosnia ed erzegovina"); ?>,
-                    negativo:<?php echo getFrequencyByCountry(DbConnection(), 'neg', "bosnia ed erzegovina"); ?>}}
-            ,{State:'VATICANO',freq:{positivo:<?php echo getFrequencyByCountry(DbConnection(), 'pos', "cittÃ  del vaticano"); ?>,
-                    neutrale:<?php echo getFrequencyByCountry(DbConnection(), 'neu', "cittÃ  del vaticano"); ?>,
-                    negativo:<?php echo getFrequencyByCountry(DbConnection(), 'neg', "cittÃ  del vaticano"); ?>}}
-            ,{State:'CROAZIA',freq:{positivo:<?php echo getFrequencyByCountry(DbConnection(), 'pos', "croazia"); ?>,
-                    neutrale:<?php echo getFrequencyByCountry(DbConnection(), 'neu', "croazia"); ?>,
-                    negativo:<?php echo getFrequencyByCountry(DbConnection(), 'neg', "croazia"); ?>}}
-            ,{State:'FRANCIA',freq:{positivo:<?php echo getFrequencyByCountry(DbConnection(), 'pos', "francia"); ?>,
-                    neutrale:<?php echo getFrequencyByCountry(DbConnection(), 'neu', "francia"); ?>,
-                    negativo:<?php echo getFrequencyByCountry(DbConnection(), 'neg', "francia"); ?>}}
-            ,{State:'MONACO',freq:{positivo:<?php echo getFrequencyByCountry(DbConnection(), 'pos', "monaco"); ?>,
-                    neutrale:<?php echo getFrequencyByCountry(DbConnection(), 'neu', "monaco"); ?>,
-                    negativo:<?php echo getFrequencyByCountry(DbConnection(), 'neg', "monaco"); ?>}}
-            ,{State:'MONGOLIA',freq:{positivo:<?php echo getFrequencyByCountry(DbConnection(), 'pos', "mongolia"); ?>,
-                    neutrale:<?php echo getFrequencyByCountry(DbConnection(), 'neu', "mongolia"); ?>,
-                    negativo:<?php echo getFrequencyByCountry(DbConnection(), 'neg', "mongolia"); ?>}}
-            ,{State:'MONTENEGRO',freq:{positivo:<?php echo getFrequencyByCountry(DbConnection(), 'pos', "montenegro"); ?>,
-                    neutrale:<?php echo getFrequencyByCountry(DbConnection(), 'neu', "montenegro"); ?>,
-                    negativo:<?php echo getFrequencyByCountry(DbConnection(), 'neg', "montenegro"); ?>}}
-            ,{State:'SAN MARINO',freq:{positivo:<?php echo getFrequencyByCountry(DbConnection(), 'pos', "san marino"); ?>,
-                    neutrale:<?php echo getFrequencyByCountry(DbConnection(), 'neu', "san marino"); ?>,
-                    negativo:<?php echo getFrequencyByCountry(DbConnection(), 'neg', "san marino"); ?>}}
-            ,{State:'SLOVENIA',freq:{positivo:<?php echo getFrequencyByCountry(DbConnection(), 'pos', "slovenia"); ?>,
-                    neutrale:<?php echo getFrequencyByCountry(DbConnection(), 'neu', "slovenia"); ?>,
-                    negativo:<?php echo getFrequencyByCountry(DbConnection(), 'neg', "slovenia"); ?>}}
-            ,{State:'SVIZZERA',freq:{positivo:<?php echo getFrequencyByCountry(DbConnection(), 'pos', "svizzera"); ?>,
-                    neutrale:<?php echo getFrequencyByCountry(DbConnection(), 'neu', "svizzera"); ?>,
-                    negativo:<?php echo getFrequencyByCountry(DbConnection(), 'neg', "svizzera"); ?>}}
-            ,{State:'TUNISIA',freq:{positivo:<?php echo getFrequencyByCountry(DbConnection(), 'pos', "tunisia"); ?>,
-                    neutrale:<?php echo getFrequencyByCountry(DbConnection(), 'neu', "tunisia"); ?>,
-                    negativo:<?php echo getFrequencyByCountry(DbConnection(), 'neg', "tunisia"); ?>}}
-            ,{State:'UNGHERIA',freq:{positivo:<?php echo getFrequencyByCountry(DbConnection(), 'pos', "ungheria"); ?>,
-                    neutrale:<?php echo getFrequencyByCountry(DbConnection(), 'neu', "ungheria"); ?>,
-                    negativo:<?php echo getFrequencyByCountry(DbConnection(), 'neg', "ungheria"); ?>}}
 
-        ];
-        //var freqDataState=<?php /*echo getFrequencyAllCountries(DbConnection());*/ ?>;
+        var freqDataState=<?php echo getFrequencyAllCountries(DbConnection()); ?>;
         //console.log("freqdatastate", freqDataState);
         dashboard('#dashboard',freqDataState);
     </script>
