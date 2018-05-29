@@ -1,0 +1,66 @@
+
+/*fData*/
+
+[
+        {State:'piemonte',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "piemonte"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "piemonte"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "piemonte"); ?>}}
+        ,{State:"valle d'aosta",freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "valle d'aosta"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "valle d'aosta"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "valle d'aosta"); ?>}}
+        ,{State:'lombardia',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "lombardia"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "lombardia"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "lombardia"); ?>}}
+        ,{State:'trentino-alto adige',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "trentino-alto adige"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "trentino-alto adige"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "trentino-alto adige"); ?>}}
+        ,{State:'veneto',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "veneto"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "veneto"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "veneto"); ?>}}
+        ,{State:'friuli venezia giulia',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "friuli-venezia giulia"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "friuli-venezia giulia"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "friuli-venezia giulia"); ?>}}
+        ,{State:'liguria',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "liguria"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "liguria"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "liguria"); ?>}}
+        ,{State:'emilia-romagna',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "emilia-romagna"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "emilia-romagna"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "emilia-romagna"); ?>}}
+        ,{State:'toscana',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "toscana"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "toscana"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "toscana"); ?>}}
+        ,{State:'umbria',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "umbria"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "umbria"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "umbria"); ?>}}
+        ,{State:'marche',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "marche"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "marche"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "marche"); ?>}}
+        ,{State:'lazio',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "lazio"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "lazio"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "lazio"); ?>}}
+        ,{State:'abruzzo',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "abruzzo"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "abruzzo"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "abruzzo"); ?>}}
+        ,{State:'molise',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "molise"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "molise"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "molise"); ?>}}
+        ,{State:'campania',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "campania"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "campania"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "campania"); ?>}}
+        ,{State:'puglia',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "puglia"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "puglia"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "puglia"); ?>}}
+        ,{State:'basilicata',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "basilicata"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "basilicata"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "basilicata"); ?>}}
+        ,{State:'calabria',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "calabria"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "calabria"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "calabria"); ?>}}
+        ,{State:'sicilia',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "sicilia"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "sicilia"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "sicilia"); ?>}}
+        ,{State:'sardegna',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "sardegna"); ?>,
+                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "sardegna"); ?>,
+                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "sardegna"); ?>}}
+
+    ];

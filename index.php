@@ -33,16 +33,16 @@
                 <div class="filter-content" >
                     <div data-toggle="buttons" id="toggles-sentiment">
                         <label class="btn btn-primary">
-                            <input type="radio" hidden id="option1" autocomplete="off" name="radio-sentiment" value="all" checked> Tutti
+                            <input type="radio" hidden id="option1" autocomplete="off" name="radio-sentiment" value="tutti" checked> Tutti
                         </label>
                         <label class="btn btn-success">
-                            <input type="radio" hidden id="option2" autocomplete="off" name="radio-sentiment" value="pos" > Positivo
+                            <input type="radio" hidden id="option2" autocomplete="off" name="radio-sentiment" value="positivo" > Positivo
                         </label>
                         <label class="btn btn-warning">
-                            <input type="radio" hidden id="option3" autocomplete="off" name="radio-sentiment" value="neu" > Neutro
+                            <input type="radio" hidden id="option3" autocomplete="off" name="radio-sentiment" value="neutrale" > Neutro
                         </label>
                         <label class="btn btn-danger">
-                            <input type="radio" hidden id="option4" autocomplete="off" name="radio-sentiment" value="neg" > Negativo
+                            <input type="radio" hidden id="option4" autocomplete="off" name="radio-sentiment" value="negativo" > Negativo
                         </label>
                     </div>
                 </div>
@@ -118,9 +118,9 @@
 
             // function to handle histogram.
             function histoGram(fD){
-                var hG={},    hGDim = {t: 60, r: 0, b: 30, l: 0};
-                hGDim.w = 1000 - hGDim.l - hGDim.r,
-                    hGDim.h = 300 - hGDim.t - hGDim.b;
+                var hG={},    hGDim = {t: 60, r: 0, b: 150, l: 0};
+                hGDim.w = 600 - hGDim.l - hGDim.r, //1000
+                    hGDim.h = 450 - hGDim.t - hGDim.b;
 
                 //create svg for histogram.
                 var hGsvg = d3.select(id).append("svg")
@@ -137,8 +137,13 @@
                     .attr("transform", "translate(0," + hGDim.h + ")")
                     .call(d3.svg.axis().scale(x).orient("bottom"));
 
-
+                // mette le labels in verticale
                 var labels = d3.selectAll(".tick").selectAll("text");
+                labels.attr("transform", "rotate(90)").attr("style","").attr("y", "-3").attr("x", "10");
+
+
+                // Divide le labels troppo lunghe in più righe
+                /*var labels = d3.selectAll(".tick").selectAll("text");
                 labels.each(function () {
                     var strLabel = d3.select(this).html();
                     if (strLabel.length > 10){
@@ -149,7 +154,7 @@
                         }
                     }
 
-                });
+                });*/
 
                 // Create function for y-axis map.
                 var y = d3.scale.linear().range([hGDim.h, 0])
@@ -220,7 +225,7 @@
 
                 // create svg for pie chart.
                 var piesvg = d3.select(id).append("svg")
-                    .attr("width", pieDim.w).attr("height", pieDim.h).append("g")
+                    .attr("width", pieDim.w).attr("height", pieDim.h)./*attr("style","vertical-align:top").*/append("g")
                     .attr("transform", "translate("+pieDim.w/2+","+pieDim.h/2+")");
 
                 // create function to draw the arcs of the pie slices.
@@ -375,6 +380,25 @@
 
     <script>
 
+        function initMap(){
+            if (window.XMLHttpRequest) {
+                // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp = new XMLHttpRequest();
+            } else {
+                // code for IE6, IE5
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    //document.getElementById("json").innerHTML = this.responseText;
+                    var response = JSON.parse(this.responseText);
+                    drawMap(response);
+                }
+            };
+            xmlhttp.open("GET", "getdata.php");
+            xmlhttp.send();
+        }
+
         /*MAPPA*/
     function drawMap(fData) {
         var width = window.innerWidth * 3 / 5,
@@ -405,7 +429,7 @@
 
         var g = svg.append("g");
 
-        d3.json("json/regioni.json", function (error, it) {
+        d3.json("json/regioni3.json", function (error, it) {
             if (error) throw error;
 
             g.append("g")
@@ -430,6 +454,56 @@
             //updateMapColors(fData);
 
         });
+
+
+        function resetMap(){
+            if (window.XMLHttpRequest) {
+                // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp = new XMLHttpRequest();
+            } else {
+                // code for IE6, IE5
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    //document.getElementById("json").innerHTML = this.responseText;
+                    var response = JSON.parse(this.responseText);
+                    var newTF = ['positivo','neutrale','negativo'].map(function(d){ // calculate total frequency by segment for all state.
+                        return {type:d, freq: d3.sum(response.map(function(t){ return t.freq[d];}))};
+                    });
+
+                    //console.log(d3.selectAll(".active").attr("id"));
+                    var active = d3.selectAll(".active");
+                    if (active.size() > 0){
+                        var st = response.filter(function (s) {
+                                return s.State == active.attr("id");
+                            })[0],
+                            nD = d3.keys(st.freq).map(function (s) {
+                                return {type: s, freq: st.freq[s]};
+                            });
+                        newTF = nD;
+                    }
+
+                    updateData(response);
+                    pieLeg.update(newTF);
+                    pC.update(newTF);
+                }
+            };
+            xmlhttp.open("GET", "getdata.php");
+            xmlhttp.send();
+
+        }
+
+        function updateData(nD){
+            fData = nD;
+
+            var newTF = ['positivo','neutrale','negativo'].map(function(d){
+                return {type:d, freq: d3.sum(nD.map(function(t){ return t.freq[d];}))};
+            });
+
+            tF = newTF;
+        }
+
 
         var mapColors = {positivo:["#80FF80", "#41FF32", "#00C200", "#004200" ],
             neutrale:["#fff682", "#ffe031", "#ffab1c", "#e08e1c" ],
@@ -684,6 +758,8 @@
         function handleRadioSentiment(d) {
             if (d !== "tutti") {
                 fData.forEach(function (state) {
+                    var name = state.State;
+                    console.log(name);
                     var valore = state.freq[d];
                     var somma = state.freq["positivo"] + state.freq["neutrale"] + state.freq["negativo"];
                     var perc = 0;
@@ -691,6 +767,8 @@
                         perc = (valore / somma) * 100;
                         //console.log(state.State);
                         document.getElementById(state.State).setAttribute("style", "fill:" + getColor(d, perc));
+                    } else {
+                        document.getElementById(state.State).setAttribute("style", "fill:" + getColor(d, 0));
                     }
                     mapLeg.update(mapColors[d]);
                     //console.log(state.State + ": " + valore + " su " + somma + " ("+ perc +")");
@@ -717,6 +795,7 @@
 
         /* Filtro periodo */
         document.getElementById("btn-datefilter-apply").addEventListener("click", dateFilter);
+        document.getElementById("btn-datefilter-cancel").addEventListener("click", resetMap);
 
 
         function dateFilter(){
@@ -738,11 +817,37 @@
                         //document.getElementById("json").innerHTML = this.responseText;
                         var response = JSON.parse(this.responseText);
 
-                        for(var i = 0; i < response.length; i++) {
-                            var obj = response[i];
 
-                            //console.log(obj.State);
+                        // calculate total frequency by segment for all state.
+                        var newTF = ['positivo','neutrale','negativo'].map(function(d){
+                            return {type:d, freq: d3.sum(response.map(function(t){ return t.freq[d];}))};
+                        });
+
+                        //console.log(d3.selectAll(".active").attr("id"));
+                        var active = d3.select("#states").selectAll(".active");
+                        if (active.size() > 0){
+                            var st = response.filter(function (s) {
+                                    return s.State == active.attr("id");
+                                })[0],
+                                nD = d3.keys(st.freq).map(function (s) {
+                                    return {type: s, freq: st.freq[s]};
+                                });
+                            newTF = nD;
                         }
+                        updateData(response);
+
+                        //TODO: da fare sta cosa
+                        /*var activeSentimentFilter = d3.select("#toggles-sentiment").selectAll(".active");
+                        if (activeSentimentFilter.size() > 0){
+                            console.log("matteo puzza");
+                            activeSentimentFilter.call(function (d) {
+                                console.log(d[0]);
+                                handleRadioSentiment(d);
+                            })
+                        }*/
+
+                        pieLeg.update(newTF);
+                        pC.update(newTF);
                     }
                 };
                 xmlhttp.open("GET", "datefilter.php?month=" + month + "&year=" + year);
@@ -778,76 +883,7 @@
 </body>
 
 <script>
-    /*DATI INFO*/
-    var freqData=[
-        {State:'piemonte',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "piemonte"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "piemonte"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "piemonte"); ?>}}
-        ,{State:"valle d'aosta",freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "valle d'aosta"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "valle d'aosta"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "valle d'aosta"); ?>}}
-        ,{State:'lombardia',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "lombardia"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "lombardia"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "lombardia"); ?>}}
-        ,{State:'trentino-alto adige',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "trentino-alto adige"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "trentino-alto adige"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "trentino-alto adige"); ?>}}
-        ,{State:'veneto',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "veneto"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "veneto"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "veneto"); ?>}}
-        ,{State:'friuli venezia giulia',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "friuli-venezia giulia"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "friuli-venezia giulia"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "friuli-venezia giulia"); ?>}}
-        ,{State:'liguria',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "liguria"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "liguria"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "liguria"); ?>}}
-        ,{State:'emilia-romagna',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "emilia-romagna"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "emilia-romagna"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "emilia-romagna"); ?>}}
-        ,{State:'toscana',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "toscana"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "toscana"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "toscana"); ?>}}
-        ,{State:'umbria',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "umbria"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "umbria"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "umbria"); ?>}}
-        ,{State:'marche',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "marche"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "marche"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "marche"); ?>}}
-        ,{State:'lazio',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "lazio"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "lazio"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "lazio"); ?>}}
-        ,{State:'abruzzo',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "abruzzo"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "abruzzo"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "abruzzo"); ?>}}
-        ,{State:'molise',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "molise"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "molise"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "molise"); ?>}}
-        ,{State:'campania',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "campania"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "campania"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "campania"); ?>}}
-        ,{State:'puglia',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "puglia"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "puglia"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "puglia"); ?>}}
-        ,{State:'basilicata',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "basilicata"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "basilicata"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "basilicata"); ?>}}
-        ,{State:'calabria',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "calabria"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "calabria"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "calabria"); ?>}}
-        ,{State:'sicilia',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "sicilia"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "sicilia"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "sicilia"); ?>}}
-        ,{State:'sardegna',freq:{positivo:<?php echo getFrequencyByRegion(DbConnection(), 'pos', "sardegna"); ?>,
-                neutrale:<?php echo getFrequencyByRegion(DbConnection(), 'neu', "sardegna"); ?>,
-                negativo:<?php echo getFrequencyByRegion(DbConnection(), 'neg', "sardegna"); ?>}}
-
-    ];
-
-
-
-    drawMap(freqData);
-
-
+    initMap();
 </script>
 
 </html>

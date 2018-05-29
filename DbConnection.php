@@ -101,9 +101,9 @@ function getIdLatLon($conn){
     return $return;
 }
 
-function getNoCountry($conn){
+function getNoRegion($conn){
     $return = null;
-    $sql = "SELECT Id, Lat, Lon FROM Tweet WHERE Country=''";
+    $sql = "SELECT Id, Lat, Lon FROM Tweet WHERE Region='null' AND Country='italia'";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         // output data of each row

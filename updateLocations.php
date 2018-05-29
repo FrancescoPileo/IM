@@ -10,7 +10,7 @@
     <?php
         include_once 'DbConnection.php';
 
-        $input = getNoCountry(DbConnection());
+        $input = getNoRegion(DbConnection());
     ?>
 </head>
 <body>
