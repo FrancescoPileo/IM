@@ -14,18 +14,26 @@ $password = '123456';
 $database = 'IM';
 $conn = new mysqli($host, $username, $password, $database);
 
-$month = intval($_GET['month']);
-$year = intval($_GET['year']);
+if (isset($_GET['month']) && isset($_GET['year'])){
+    $month = intval($_GET['month']);
+    $year = intval($_GET['year']);
+
+    $sql = "SELECT Region, SUM(if ((Sentiment='pos' AND MONTH(Date)=" . $month .  " AND YEAR(Date)=" . $year . "), 1, 0)) as 'pos', " .
+        "SUM(if ((Sentiment='neu' AND MONTH(Date)=" . $month .  " AND YEAR(Date)=" . $year . "), 1, 0)) as 'neu', " .
+        "SUM(if ((Sentiment='neg' AND MONTH(Date)=" . $month .  " AND YEAR(Date)=" . $year . "), 1, 0)) as 'neg' " .
+        "FROM Tweet WHERE Region!='null' AND Country='italia'"
+        . " GROUP BY Region";
+} else {
+    $sql = "SELECT Region,SUM(if (Sentiment='pos', 1, 0)) as 'pos',SUM(if (Sentiment='neu', 1, 0)) as 'neu',SUM(if (Sentiment='neg', 1, 0)) as 'neg' FROM Tweet WHERE Region!='null' AND Country='italia' GROUP BY Region";
+}
+
+
 
 if (!$conn) {
     die('Could not connect: ' . mysqli_error($conn));
 }
 
-$sql = "SELECT Region, SUM(if ((Sentiment='pos' AND MONTH(Date)=" . $month .  " AND YEAR(Date)=" . $year . "), 1, 0)) as 'pos', " .
-                        "SUM(if ((Sentiment='neu' AND MONTH(Date)=" . $month .  " AND YEAR(Date)=" . $year . "), 1, 0)) as 'neu', " .
-                        "SUM(if ((Sentiment='neg' AND MONTH(Date)=" . $month .  " AND YEAR(Date)=" . $year . "), 1, 0)) as 'neg' " .
-                        "FROM Tweet WHERE Region!='null' AND Country='italia'"
-                        . " GROUP BY Region";
+
 
 $result = $conn->query($sql);
 

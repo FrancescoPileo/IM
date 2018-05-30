@@ -395,7 +395,7 @@
                     drawMap(response);
                 }
             };
-            xmlhttp.open("GET", "getdata.php");
+            xmlhttp.open("GET", "get_data.php");
             xmlhttp.send();
         }
 
@@ -441,6 +441,7 @@
                 .attr("id", function (d) {
                     return d.properties.name.toLowerCase()
                 })
+                .attr("fill", "#07a0aa")
                 .on("click", clicked);
 
             g.append("path")
@@ -717,19 +718,27 @@
                     var valore = state.freq[sentiment];
                     var somma = state.freq["positivo"] + state.freq["neutrale"] + state.freq["negativo"];
                     var perc = 0;
+                    var selector = '[id=\"' + state.State + '\"]';
                     if (somma > 0) {
                         perc = (valore / somma) * 100;
                         //console.log(state.State);
-                        document.getElementById(state.State).setAttribute("style", "fill:" + getColor(sentiment, perc));
+
+                        d3.select(selector).transition().duration(500).attr("fill", getColor(sentiment, perc));
+                        //document.getElementById(state.State).setAttribute("style", "fill:" + getColor(sentiment, perc));
                     } else {
-                        document.getElementById(state.State).setAttribute("style", "fill:" + getColor(sentiment, 0));
+                        d3.select(selector).transition().duration(500).attr("fill", getColor(sentiment, 0));
+                        //document.getElementById(state.State).setAttribute("style", "fill:" + getColor(sentiment, 0));
                     }
                     mapLeg.update(mapColors[sentiment]);
                     //console.log(state.State + ": " + valore + " su " + somma + " ("+ perc +")");
                 });
             } else {
                 console.log("Tutti");
-                fData.forEach(function (state) { document.getElementById(state.State).removeAttribute("style"); });
+                fData.forEach(function (state) {
+                    var selector = '[id=\"' + state.State + '\"]';
+                    d3.select(selector).transition().duration(500).attr("fill", "#07a0aa");
+                    //document.getElementById(state.State).removeAttribute("style");
+                });
                 mapLeg.hide();
             }
 
@@ -802,11 +811,11 @@
                 console.log(month + " " + year);
 
                 if (month !== 0 && year !== 0 ){
-                    xmlhttp.open("GET", "datefilter.php?month=" + month + "&year=" + year);
+                    xmlhttp.open("GET", "get_data.php?month=" + month + "&year=" + year);
                     xmlhttp.send();
                 }
             } else {
-                xmlhttp.open("GET", "getdata.php");
+                xmlhttp.open("GET", "get_data.php");
                 xmlhttp.send();
             }
         }
