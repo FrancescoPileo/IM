@@ -336,18 +336,15 @@
                 fData = newData;
                 fData.forEach(function(d){d.total=d.freq.positivo+d.freq.negativo+d.freq.neutrale;});
 
-                var nD = ['positivo','neutrale','negativo'].map(function(d){
+                tF = ['positivo','neutrale','negativo'].map(function(d){
                     return {type:d, freq: d3.sum(fData.map(function(t){ return t.freq[d];}))};
                 });
-
-                console.log(nD);
-
 
                 // call update functions
                 hG.update(fData.map(function(v){
                     return [v.State,v.total];}), barColor);
-                pC.update(nD);
-                leg.update(nD);
+                pC.update(tF);
+                leg.update(tF);
             };
 
             return dash;
