@@ -95,6 +95,7 @@
             <div id="info" class="box">
                 <table id="info-table">
                     <tr><td id="info-regione" align="center">ITALIA</td></tr>
+                    <tr><td id="info-filter" align="center"></td></tr>
                     <tr><td id="info-data" align="center"></td></tr>
                 </table>
             </div>
@@ -109,7 +110,14 @@
         </div>
 
     <script>
+
+        const monthNames = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
+            "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"
+        ];
+
         function dashboard(id, fData){
+            var dash = {};
+
             var barColor = 'steelblue';
             function segColor(c){ return {positivo:"#00C200", neutrale:"#e08e1c", negativo:"#FF0000"}[c]; }
 
@@ -323,12 +331,32 @@
             var hG = histoGram(sF), // create the histogram.
                 pC = pieChart(tF), // create the pie-chart.
                 leg= legend(tF);  // create the legend.
+
+            dash.update = function (newData) {
+                fData = newData;
+                fData.forEach(function(d){d.total=d.freq.positivo+d.freq.negativo+d.freq.neutrale;});
+
+                var nD = ['positivo','neutrale','negativo'].map(function(d){
+                    return {type:d, freq: d3.sum(fData.map(function(t){ return t.freq[d];}))};
+                });
+
+                console.log(nD);
+
+
+                // call update functions
+                hG.update(fData.map(function(v){
+                    return [v.State,v.total];}), barColor);
+                pC.update(nD);
+                leg.update(nD);
+            };
+
+            return dash;
         }
 
 
         var freqDataState=<?php echo getFrequencyAllCountries(DbConnection()); ?>;
         //console.log("freqdatastate", freqDataState);
-        dashboard('#dashboard',freqDataState);
+        var dash = dashboard('#dashboard',freqDataState);
     </script>
 
         <script>
@@ -800,6 +828,7 @@
 
                     pieLeg.update(newTF);
                     pC.update(newTF);
+                    dateFilter2(toActive);
                 }
             };
             if (toActive){
@@ -808,13 +837,15 @@
                 var selYear = document.getElementById("sel-year-datefilter");
                 var year = parseInt(selYear.options[selYear.selectedIndex].value);
 
-                console.log(month + " " + year);
+                d3.select("#info-filter").html(monthNames[month - 1] + " " + year);
 
                 if (month !== 0 && year !== 0 ){
                     xmlhttp.open("GET", "get_data.php?month=" + month + "&year=" + year);
                     xmlhttp.send();
                 }
             } else {
+                d3.select("#info-filter").html("");
+
                 xmlhttp.open("GET", "get_data.php");
                 xmlhttp.send();
             }
@@ -828,6 +859,42 @@
             });
 
             tF = newTF;
+        }
+
+
+        function dateFilter2(toActive) {
+            if (window.XMLHttpRequest) {
+                // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp = new XMLHttpRequest();
+            } else {
+                // code for IE6, IE5
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    //document.getElementById("json").innerHTML = this.responseText;
+                    var response = JSON.parse(this.responseText);
+
+                    dash.update(response);
+                }
+            };
+
+            if (toActive){
+                var selMonth = document.getElementById("sel-month-datefilter");
+                var month = parseInt(selMonth.options[selMonth.selectedIndex].value);
+                var selYear = document.getElementById("sel-year-datefilter");
+                var year = parseInt(selYear.options[selYear.selectedIndex].value);
+
+                if (month !== 0 && year !== 0 ){
+                    xmlhttp.open("GET", "get_abroad_data.php?month=" + month + "&year=" + year);
+                    xmlhttp.send();
+                }
+            } else {
+                d3.select("#info-filter").html("");
+
+                xmlhttp.open("GET", "get_abroad_data.php");
+                xmlhttp.send();
+            }
         }
 
     }

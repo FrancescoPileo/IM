@@ -231,3 +231,12 @@ body {
     align:right;
     width:50px;
 }
+
+#info-regione{
+    font-weight: bold;
+    font-size: large;
+}
+
+#info-filter{
+    color: #002F80;
+}
