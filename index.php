@@ -456,55 +456,6 @@
         });
 
 
-        function resetMap(){
-            if (window.XMLHttpRequest) {
-                // code for IE7+, Firefox, Chrome, Opera, Safari
-                xmlhttp = new XMLHttpRequest();
-            } else {
-                // code for IE6, IE5
-                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-            }
-            xmlhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    //document.getElementById("json").innerHTML = this.responseText;
-                    var response = JSON.parse(this.responseText);
-                    var newTF = ['positivo','neutrale','negativo'].map(function(d){ // calculate total frequency by segment for all state.
-                        return {type:d, freq: d3.sum(response.map(function(t){ return t.freq[d];}))};
-                    });
-
-                    //console.log(d3.selectAll(".active").attr("id"));
-                    var active = d3.selectAll(".active");
-                    if (active.size() > 0){
-                        var st = response.filter(function (s) {
-                                return s.State == active.attr("id");
-                            })[0],
-                            nD = d3.keys(st.freq).map(function (s) {
-                                return {type: s, freq: st.freq[s]};
-                            });
-                        newTF = nD;
-                    }
-
-                    updateData(response);
-                    pieLeg.update(newTF);
-                    pC.update(newTF);
-                }
-            };
-            xmlhttp.open("GET", "getdata.php");
-            xmlhttp.send();
-
-        }
-
-        function updateData(nD){
-            fData = nD;
-
-            var newTF = ['positivo','neutrale','negativo'].map(function(d){
-                return {type:d, freq: d3.sum(nD.map(function(t){ return t.freq[d];}))};
-            });
-
-            tF = newTF;
-        }
-
-
         var mapColors = {positivo:["#80FF80", "#41FF32", "#00C200", "#004200" ],
             neutrale:["#fff682", "#ffe031", "#ffab1c", "#e08e1c" ],
             negativo:["#FF9F71", "#FF0000", "#E10000", "#C20000" ]};
@@ -753,24 +704,27 @@
 
 
         //Filtro sentiment
-        d3.select("#toggles-sentiment").selectAll('.btn').data(["tutti", "positivo", "neutrale", "negativo"]).on("click", handleRadioSentiment);
+        d3.select("#toggles-sentiment").selectAll('.btn').on("click", function(){
+            var sentiment = d3.select(this).select("input").filter(function (d, i) {return i === 0}).node().value;
+            handleRadioSentiment(sentiment);
+        });
 
-        function handleRadioSentiment(d) {
-            if (d !== "tutti") {
+        function handleRadioSentiment(sentiment) {
+
+            if (sentiment !== "tutti") {
                 fData.forEach(function (state) {
                     var name = state.State;
-                    console.log(name);
-                    var valore = state.freq[d];
+                    var valore = state.freq[sentiment];
                     var somma = state.freq["positivo"] + state.freq["neutrale"] + state.freq["negativo"];
                     var perc = 0;
                     if (somma > 0) {
                         perc = (valore / somma) * 100;
                         //console.log(state.State);
-                        document.getElementById(state.State).setAttribute("style", "fill:" + getColor(d, perc));
+                        document.getElementById(state.State).setAttribute("style", "fill:" + getColor(sentiment, perc));
                     } else {
-                        document.getElementById(state.State).setAttribute("style", "fill:" + getColor(d, 0));
+                        document.getElementById(state.State).setAttribute("style", "fill:" + getColor(sentiment, 0));
                     }
-                    mapLeg.update(mapColors[d]);
+                    mapLeg.update(mapColors[sentiment]);
                     //console.log(state.State + ": " + valore + " su " + somma + " ("+ perc +")");
                 });
             } else {
@@ -794,66 +748,79 @@
         }
 
         /* Filtro periodo */
-        document.getElementById("btn-datefilter-apply").addEventListener("click", dateFilter);
-        document.getElementById("btn-datefilter-cancel").addEventListener("click", resetMap);
+        document.getElementById("btn-datefilter-apply").addEventListener("click", function(){ dateFilter(true);});
+        document.getElementById("btn-datefilter-cancel").addEventListener("click", function(){ dateFilter(false);});
 
 
-        function dateFilter(){
-            var selMonth = document.getElementById("sel-month-datefilter");
-            var month = parseInt(selMonth.options[selMonth.selectedIndex].value);
-            var selYear = document.getElementById("sel-year-datefilter");
-            var year = parseInt(selYear.options[selYear.selectedIndex].value);
+        function dateFilter(toActive){
+            if (window.XMLHttpRequest) {
+                // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp = new XMLHttpRequest();
+            } else {
+                // code for IE6, IE5
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    //document.getElementById("json").innerHTML = this.responseText;
+                    var response = JSON.parse(this.responseText);
 
-            if (month !== 0 && year !== 0 ){
-                if (window.XMLHttpRequest) {
-                    // code for IE7+, Firefox, Chrome, Opera, Safari
-                    xmlhttp = new XMLHttpRequest();
-                } else {
-                    // code for IE6, IE5
-                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-                }
-                xmlhttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        //document.getElementById("json").innerHTML = this.responseText;
-                        var response = JSON.parse(this.responseText);
+                    // calculate total frequency by segment for all state.
+                    var newTF = ['positivo','neutrale','negativo'].map(function(d){
+                        return {type:d, freq: d3.sum(response.map(function(t){ return t.freq[d];}))};
+                    });
 
-
-                        // calculate total frequency by segment for all state.
-                        var newTF = ['positivo','neutrale','negativo'].map(function(d){
-                            return {type:d, freq: d3.sum(response.map(function(t){ return t.freq[d];}))};
-                        });
-
-                        //console.log(d3.selectAll(".active").attr("id"));
-                        var active = d3.select("#states").selectAll(".active");
-                        if (active.size() > 0){
-                            var st = response.filter(function (s) {
-                                    return s.State == active.attr("id");
-                                })[0],
-                                nD = d3.keys(st.freq).map(function (s) {
-                                    return {type: s, freq: st.freq[s]};
-                                });
-                            newTF = nD;
-                        }
-                        updateData(response);
-
-                        //TODO: da fare sta cosa
-                        /*var activeSentimentFilter = d3.select("#toggles-sentiment").selectAll(".active");
-                        if (activeSentimentFilter.size() > 0){
-                            console.log("matteo puzza");
-                            activeSentimentFilter.call(function (d) {
-                                console.log(d[0]);
-                                handleRadioSentiment(d);
-                            })
-                        }*/
-
-                        pieLeg.update(newTF);
-                        pC.update(newTF);
+                    //console.log(d3.selectAll(".active").attr("id"));
+                    var active = d3.select("#states").selectAll(".active");
+                    if (active.size() > 0){
+                        var st = response.filter(function (s) {
+                                return s.State == active.attr("id");
+                            })[0],
+                            nD = d3.keys(st.freq).map(function (s) {
+                                return {type: s, freq: st.freq[s]};
+                            });
+                        newTF = nD;
                     }
-                };
-                xmlhttp.open("GET", "datefilter.php?month=" + month + "&year=" + year);
+                    updateData(response);
+
+                    var activeSentimentFilter = d3.select("#toggles-sentiment").selectAll(".active").filter(function (d, i) { return i === 0; });
+                    if (activeSentimentFilter.size() > 0){
+                        var sentiment = activeSentimentFilter.select("input").filter(function (d, i) { return i === 0; }).node().value;
+                        handleRadioSentiment(sentiment);
+                    }
+
+                    pieLeg.update(newTF);
+                    pC.update(newTF);
+                }
+            };
+            if (toActive){
+                var selMonth = document.getElementById("sel-month-datefilter");
+                var month = parseInt(selMonth.options[selMonth.selectedIndex].value);
+                var selYear = document.getElementById("sel-year-datefilter");
+                var year = parseInt(selYear.options[selYear.selectedIndex].value);
+
+                console.log(month + " " + year);
+
+                if (month !== 0 && year !== 0 ){
+                    xmlhttp.open("GET", "datefilter.php?month=" + month + "&year=" + year);
+                    xmlhttp.send();
+                }
+            } else {
+                xmlhttp.open("GET", "getdata.php");
                 xmlhttp.send();
             }
         }
+
+        function updateData(nD){
+            fData = nD;
+
+            var newTF = ['positivo','neutrale','negativo'].map(function(d){
+                return {type:d, freq: d3.sum(nD.map(function(t){ return t.freq[d];}))};
+            });
+
+            tF = newTF;
+        }
+
     }
     </script>
 
