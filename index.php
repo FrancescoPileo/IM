@@ -110,7 +110,7 @@
         </div>
 
     <script>
-
+        /* -------------- Gestione Dashboard Paesi Esteri ---------------- */
         const monthNames = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
             "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"
         ];
@@ -350,61 +350,13 @@
             return dash;
         }
 
-
         var freqDataState=<?php echo getFrequencyAbroadCountries(DbConnection()); ?>;
         //console.log("freqdatastate", freqDataState);
         var dash = dashboard('#dashboard',freqDataState);
     </script>
 
-        <script>
-        /* GEOLOCALIZZAZIONE */
-       /* function init() {
-            var geocoder = new google.maps.Geocoder();
-
-            document.getElementById('submit').addEventListener('click', function () {
-                getLocation(geocoder);
-            });
-        }
-
-        function getLocation(geocoder){
-            var lat = document.getElementById('lat').value;
-            var lon = document.getElementById('lon').value;
-            var resultAddress = document.getElementById('result');
-
-            var latlng = {lat: parseFloat(lat), lng: parseFloat(lon)};
-            geocoder.geocode({'location': latlng}, function(results, status){
-                if (status === 'OK'){
-                    if (results[0]){
-                        var region = null;
-                        results[0].address_components.forEach(function (entry) {
-                            //console.log(entry.types[0] + ": " + entry.long_name.toLowerCase() + " (" + entry.short_name.toLowerCase() + ")");
-
-                            if (entry.types[0] === "administrative_area_level_1"){
-                                region = entry.long_name.toLowerCase();
-                            }
-                        });
-                        //window.alert(region + ": " + results[0].address_components[4].types[0]);
-                        if (document.getElementsByName(region).length === 1){
-                            for (var i = 0; i < document.getElementsByClassName("selected").length > 0; i++) {
-                                document.getElementsByClassName("selected")[i].classList.remove("selected");
-                            }
-                            document.getElementsByName(region)[0].classList.add("selected");
-                        } else {
-                            window.alert("Problema nel nome della regione");
-                        }
-                        //resultAddress.setContent(results[0].formatted_address);
-                    } else {
-                        window.alert('Nessun risultato');
-                    }
-                } else {
-                    window.alert('Geocoder failed due to: ' + status);
-                }
-            });
-        }*/
-    </script>
-
     <script>
-
+        /*---------------- Gestione Mappa e Diagramma a Torta ----------------*/
         function initMap(){
             if (window.XMLHttpRequest) {
                 // code for IE7+, Firefox, Chrome, Opera, Safari
@@ -899,7 +851,7 @@
     </script>
 
     <script>
-        /*NAVBAR*/
+        /* --------------------------NAVBAR ----------------------------------- */
 
         // When the user scrolls the page, execute myFunction
         window.onscroll = function() {myFunction()};
