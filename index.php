@@ -118,8 +118,8 @@
         function dashboard(id, fData){
             var dash = {};
 
-            var barColor = 'steelblue';
-            function segColor(c){ return {positivo:"#00C200", neutrale:"#e08e1c", negativo:"#FF0000"}[c]; }
+            var barColor = '#07a0aa';
+            function segColor(c){ return {positivo:"#00C200", neutrale:"#ffab1c", negativo:"#FF0000"}[c]; }
 
             // compute total for each state.
             fData.forEach(function(d){d.total=d.freq.positivo+d.freq.negativo+d.freq.neutrale;});
@@ -345,6 +345,24 @@
                     return [v.State,v.total];}), barColor);
                 pC.update(tF);
                 leg.update(tF);
+            };
+
+            dash.changePos = function () {
+                hG.update(fData.map(function(v){
+                    return [v.State,v.freq['positivo']];}), segColor('positivo'))
+            };
+            dash.changeNeg = function () {
+                hG.update(fData.map(function(v){
+                    return [v.State,v.freq['negativo']];}), segColor('negativo'))
+            };
+            dash.changeNeu = function () {
+                hG.update(fData.map(function(v){
+                    return [v.State,v.freq['neutrale']];}), segColor('neutrale'))
+            };
+
+            dash.normal = function () {
+                hG.update(fData.map(function(v){
+                    return [v.State,v.total];}), barColor);
             };
 
             return dash;
@@ -577,8 +595,9 @@
 
         /* INFORMAZIONI */
         var id = "#info-data";
-        var barColor = 'steelblue';
-        function segColor(c){ return {positivo:"#00C200", neutrale:"#e08e1c", negativo:"#FF0000"}[c]; }
+
+        var barColor = '#07a0aa';
+        function segColor(c){ return {positivo:"#00C200", neutrale:"#ffab1c", negativo:"#FF0000"}[c]; }
 
         // function to handle pieChart.
         function pieChart(pD){
@@ -708,6 +727,11 @@
                         //document.getElementById(state.State).setAttribute("style", "fill:" + getColor(sentiment, 0));
                     }
                     mapLeg.update(mapColors[sentiment]);
+                    switch (sentiment) {
+                        case "positivo": dash.changePos(); break;
+                        case "neutrale": dash.changeNeu(); break;
+                        case "negativo": dash.changeNeg(); break;
+                    }
                     //console.log(state.State + ": " + valore + " su " + somma + " ("+ perc +")");
                 });
             } else {
@@ -718,6 +742,7 @@
                     //document.getElementById(state.State).removeAttribute("style");
                 });
                 mapLeg.hide();
+                dash.normal();
             }
 
         }
