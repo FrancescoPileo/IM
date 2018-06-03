@@ -262,8 +262,22 @@
                 //Utility function to be called on mouseout a pie slice.
                 function mouseout(d){
                     // call the update function of histogram with all data.
-                    hG.update(fData.map(function(v){
-                        return [v.State,v.total];}), barColor);
+                    var activeSentimentFilter = d3.select("#toggles-sentiment").selectAll(".active").filter(function (d, i) { return i === 0; });
+                    if (activeSentimentFilter.size() > 0){
+                        var sentiment = activeSentimentFilter.select("input").filter(function (d, i) { return i === 0; }).node().value;
+                        switch (sentiment) {
+                            case "positivo": dash.changePos(); break;
+                            case "neutrale": dash.changeNeu(); break;
+                            case "negativo": dash.changeNeg(); break;
+                            default:
+                                hG.update(fData.map(function(v){
+                                    return [v.State,v.total];}), barColor);
+                        }
+                    } else {
+                        hG.update(fData.map(function (v) {
+                            return [v.State, v.total];
+                        }), barColor);
+                    }
                 }
                 // Animating the pie-slice requiring a custom function which specifies
                 // how the intermediate paths should be drawn.
@@ -362,7 +376,7 @@
 
             dash.normal = function () {
                 hG.update(fData.map(function(v){
-                    return [v.State,v.total];}), barColor);
+                        return [v.State,v.total];}), barColor);
             };
 
             return dash;
