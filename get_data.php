@@ -43,7 +43,7 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
 
         $object = (Object) [
-            'State' => $row['Region'],
+            'State' => strtolower($row['Region']),
             'freq' => ['positivo' => intval($row['pos']), 'neutrale' => intval($row['neu']), 'negativo' => intval($row['neg'])]];
         array_push($jsonOBJ, $object);
     }
@@ -55,7 +55,7 @@ if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
 
             $object = (Object)[
-                'State' => $row['Region'],
+                'State' => strtolower($row['Region']),
                 'freq' => ['positivo' => intval($row['pos']), 'neutrale' => intval($row['neu']), 'negativo' => intval($row['neg'])]];
             array_push($jsonOBJ, $object);
         }

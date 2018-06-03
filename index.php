@@ -351,7 +351,7 @@
         }
 
 
-        var freqDataState=<?php echo getFrequencyAllCountries(DbConnection()); ?>;
+        var freqDataState=<?php echo getFrequencyAbroadCountries(DbConnection()); ?>;
         //console.log("freqdatastate", freqDataState);
         var dash = dashboard('#dashboard',freqDataState);
     </script>
@@ -744,6 +744,7 @@
                     var somma = state.freq["positivo"] + state.freq["neutrale"] + state.freq["negativo"];
                     var perc = 0;
                     var selector = '[id=\"' + state.State + '\"]';
+                    console.log(selector);
                     if (somma > 0) {
                         perc = (valore / somma) * 100;
                         //console.log(state.State);

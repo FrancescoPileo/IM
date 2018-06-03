@@ -47,13 +47,14 @@ function getFrequencyByCountry($conn, $sentiment, $country){
     }
 }
 
-function getFrequencyAllCountries($conn){
+function getFrequencyAbroadCountries($conn){
 
     if (!$conn) {
         die('Could not connect: ' . mysqli_error($conn));
     }
 
-    $sql = "SELECT Country ,SUM(if (Sentiment='pos', 1, 0)) as 'pos',SUM(if (Sentiment='neu', 1, 0)) as 'neu',SUM(if (Sentiment='neg', 1, 0)) as 'neg' FROM Tweet WHERE Country!='italia'"
+    $sql = "SELECT Country ,SUM(if (Sentiment='pos', 1, 0)) as 'pos',SUM(if (Sentiment='neu', 1, 0)) as 'neu',SUM(if (Sentiment='neg', 1, 0)) as 'neg' "
+        . " FROM Tweet WHERE Country!='italia' AND Country!='' AND Country!='null' "
         . " GROUP BY Country";
 
     $result = $conn->query($sql);

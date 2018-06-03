@@ -21,10 +21,10 @@ if (isset($_GET['month']) && isset($_GET['year'])){
     $sql = "SELECT Country, SUM(if ((Sentiment='pos' AND MONTH(Date)=" . $month .  " AND YEAR(Date)=" . $year . "), 1, 0)) as 'pos', " .
         "SUM(if ((Sentiment='neu' AND MONTH(Date)=" . $month .  " AND YEAR(Date)=" . $year . "), 1, 0)) as 'neu', " .
         "SUM(if ((Sentiment='neg' AND MONTH(Date)=" . $month .  " AND YEAR(Date)=" . $year . "), 1, 0)) as 'neg' " .
-        "FROM Tweet WHERE Country!='null' AND Country!='italia'"
+        "FROM Tweet WHERE Country!='null' AND Country!='italia' AND Country!=''"
         . " GROUP BY Country";
 } else {
-    $sql = "SELECT Country, SUM(if (Sentiment='pos', 1, 0)) as 'pos',SUM(if (Sentiment='neu', 1, 0)) as 'neu',SUM(if (Sentiment='neg', 1, 0)) as 'neg' FROM Tweet WHERE Country!='null' AND Country!='italia' GROUP BY Country";
+    $sql = "SELECT Country, SUM(if (Sentiment='pos', 1, 0)) as 'pos',SUM(if (Sentiment='neu', 1, 0)) as 'neu',SUM(if (Sentiment='neg', 1, 0)) as 'neg' FROM Tweet WHERE Country!='null' AND Country!='' AND Country!='italia' GROUP BY Country";
 }
 
 
@@ -49,7 +49,7 @@ if ($result->num_rows > 0) {
     }
     echo json_encode($jsonOBJ);
 } else {
-    $sql = "SELECT Country, 0 as 'pos', 0 as 'neu', 0 as 'neg' FROM Tweet WHERE Country!='italia' GROUP BY Country";
+    $sql = "SELECT Country, 0 as 'pos', 0 as 'neu', 0 as 'neg' FROM Tweet WHERE Country!='italia' AND Country!='' AND Country!='null'  GROUP BY Country";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
