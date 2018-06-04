@@ -16,7 +16,9 @@
 <body>
     <div id="navbar">
         <div id="logo-cil" class="row justify-content-md-center">
-            <img class="cilento" src="img/logo_cilentotook.png" width="184" height="27">
+            <a href="http://www.cilentotook.com">
+                <img class="cilento" src="img/logo_cilentotook.png" width="184" height="27">
+            </a>
         </div>
         <div id="nav-title" class="row justify-content-md-center">
             <div id="logo" >
@@ -24,7 +26,7 @@
                 <img class="smiles" src="img/Neutral.png">
                 <img class="smiles" src="img/Negative.png">
             </div>
-            <a href="#home" id="site-name" style="color: white;">Tourism Sentiment Analysis</a>
+            <a href="." id="site-name" style="color: white;">Tourism Sentiment Analysis</a>
         </div>
 
     </div>

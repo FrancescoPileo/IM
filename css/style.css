@@ -194,8 +194,8 @@ body {
     display: block;
     clear: both;
 }
-/* Navbar links */
-#navbar a {
+/* Site name */
+#site-name {
     float: left;
     display: block;
     color: #ffffff;
