@@ -27,12 +27,19 @@ body {
 
 #logo{
     display: inline-block;
-    float: left;
+    float: right;
     margin: 5px;
 }
 
+#nav-title {
+    background-color: #010042;
+    overflow: auto;
+    height: auto;
+}
+
 #site-name{
-    font-size: xx-large;
+    font-size: x-large;
+    font-family: "Calibri";
 }
 
 
@@ -44,7 +51,7 @@ body {
     width: 200px; /* Set the width of the sidebar */
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
     /*z-index: -1;*/ /* Stay on top */
-    top: 80px; /* Stay at the top */
+    top: 130px;/* at the top */
     left: 0;
     background-color: #ffffff; /* Black */
     overflow-x: hidden; /* Disable horizontal scroll */
@@ -174,11 +181,18 @@ body {
 #navbar {
     z-index: 1;
     overflow: hidden;
-    background-color: #838383;
-    height: 80px;
-    padding: 5px;
+    background-color: white;
+    padding: 0px;
+}
+#logo-cil {
+    padding-top: 15px;
+    padding-bottom: 10px;
 }
 
+#linea {
+    display: block;
+    clear: both;
+}
 /* Navbar links */
 #navbar a {
     float: left;
@@ -198,7 +212,7 @@ body {
 
 /* Add some top padding to the page content to prevent sudden quick movement (as the navigation bar gets a new position at the top of the page (position:fixed and top:0) */
 .sticky + .content {
-    padding-top: 60px;
+    padding-top: 120px;
 }
 
 /*-------------------------------- Informazioni -----------------------------------*/
