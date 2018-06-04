@@ -16,7 +16,7 @@
 <body>
     <div id="navbar">
         <div id="logo-cil" class="row justify-content-md-center">
-            <a href="http://www.cilentotook.com">
+            <a href="http://www.cilentotook.com" target="_blank" title="Visita il sito di Cilento Took">
                 <img class="cilento" src="img/logo_cilentotook.png" width="184" height="27">
             </a>
         </div>
