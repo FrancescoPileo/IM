@@ -14,19 +14,23 @@
 
 <body>
     <div id="navbar">
-        <div id="logo">
-            <img class="smiles" src="img/Positive.png">
-            <img class="smiles" src="img/Neutral.png">
-            <img class="smiles" src="img/Negative.png">
+        <div id="logo-cil" class="row justify-content-md-center">
+            <img class="cilento" src="img/logo_cilentotook.png" width="184" height="27">
         </div>
-        <a href="#home" id="site-name">Tourism Sentiment Analysis</a>
+        <div id="nav-title" class="row justify-content-md-center">
+            <div id="logo" >
+                <img class="smiles" src="img/Positive.png">
+                <img class="smiles" src="img/Neutral.png">
+                <img class="smiles" src="img/Negative.png">
+            </div>
+            <a href="#home" id="site-name" style="color: white;">Tourism Sentiment Analysis</a>
+        </div>
+
     </div>
 
     <div class="content">
         <div class="sidenav">
-            <div class="filter">
-                <div class="filter-name">Filtri:</div>
-            </div>
+
 
             <div class="filter" id="filter-sentiment">
                 <div class="filter-name"> Sentiment: <br> </div>
@@ -75,7 +79,6 @@
                     <input type="button" id="btn-datefilter-cancel" class="btn btn-sm btn-secondary" value="Cancella">
                 </div>
             </div>
-            <a href="#">About</a>
         </div>
 
         <!-- <div id="geocoder">
@@ -90,6 +93,7 @@
 
 
         <div id="contenitore">
+            <h4 style="font-weight: bold">ITALIA</h4>
             <div id="map" class="box">
             </div>
             <div id="info" class="box">
@@ -102,8 +106,11 @@
         </div>
 
         <div id="json"></div>
-
+        <div id="linea">
+            <hr id="linea-sep" align=”left” size=”2″ width=”300" color=”red”>
+        </div>
         <div id="altriStati">
+            <h4 style="font-weight: bold">STATI ESTERI</h4>
             <div id='dashboard'>
 
             </div>
