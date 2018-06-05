@@ -1,6 +1,6 @@
 ##### Progetto in Informatica Multimediale, UNIVPM, a.a. 2017-18
 
-## Tourism Sentiment Analisis
+## Tourism Sentiment Analysis
 ###### in collaborazione con CilentoTook - www.cilentotook.com
 
 ##### Autori:
