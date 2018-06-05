@@ -29,12 +29,14 @@ body {
     display: inline-block;
     float: right;
     margin: 5px;
+    height: 65px;
+    width: 180px;
 }
 
 #nav-title {
     background-color: #010042;
     overflow: auto;
-    height: auto;
+    height: 70px;
 }
 
 #site-name{
