@@ -83,18 +83,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- <div id="geocoder">
-            <label for="lat">Latitude</label>
-            <input id="lat" type="textbox" value="45.4386">
-            <label for="lon">Longitude</label>
-            <input id="lon" type="textbox" value="12.3267">
-            <input id="submit" type="button" value="Geolocalizza">
-            <input id="name" type="textbox">
-        </div> -->
-
-
-
         <div id="contenitore">
             <h4 style="font-weight: bold">ITALIA</h4>
             <div id="map" class="box">
@@ -364,9 +352,22 @@
                     return {type:d, freq: d3.sum(fData.map(function(t){ return t.freq[d];}))};
                 });
 
-                // call update functions
-                hG.update(fData.map(function(v){
-                    return [v.State,v.total];}), barColor);
+                var activeSentimentFilter = d3.select("#toggles-sentiment").selectAll(".active").filter(function (d, i) { return i === 0; });
+                if (activeSentimentFilter.size() > 0){
+                    var sentiment = activeSentimentFilter.select("input").filter(function (d, i) { return i === 0; }).node().value;
+                    switch (sentiment) {
+                        case "positivo": dash.changePos(); break;
+                        case "neutrale": dash.changeNeu(); break;
+                        case "negativo": dash.changeNeg(); break;
+                        default:
+                            hG.update(fData.map(function(v){
+                                return [v.State,v.total];}), barColor);
+                    }
+                } else {
+                    hG.update(fData.map(function (v) {
+                        return [v.State, v.total];
+                    }), barColor);
+                }
                 pC.update(tF);
                 leg.update(tF);
             };
