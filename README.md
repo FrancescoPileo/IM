@@ -1,7 +1,6 @@
-# IM
-Progetto Informatica Multimediale a.a. 2017-18
+##### Progetto Informatica Multimediale a.a. 2017-18
 
-Tourism Sentiment Analisis
+## Tourism Sentiment Analisis
 
 Autori:
   - Marco Ciotti - https://github.com/ACpicchio 
