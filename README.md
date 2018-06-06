@@ -4,7 +4,7 @@
 ###### in collaborazione con CilentoTook - www.cilentotook.com
 
 ##### Autori:
-  - Marco Ciotti - S108100 - https://github.com/ACpicchio 
+  - Marco Ciotti - S108100 - https://github.com/marcociotti
   - Matteo Patti - S108101 - https://github.com/matteopatti 
   - Francesco Antonio Pileo - S1080994 - https://github.com/FrancescoPileo
 
